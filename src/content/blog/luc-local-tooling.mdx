@@ -1,6 +1,6 @@
 ---
 title: "Luc as a Terminal Agent Runtime"
-description: "A draft on a streaming TUI agent, local tools, provider adapters, and runtime extensions."
+description: "Why a terminal agent should be close to the workspace and extensible without recompiling."
 date: "June 24, 2026"
 draft: true
 tags:
@@ -10,30 +10,38 @@ tags:
 project: luc
 ---
 
-Luc is a terminal AI agent built around a streaming TUI, local tool execution, and runtime extension points.
+Most agent experiments start as a chat box with tools. That is fine for a demo, but it gets uncomfortable when the tool becomes part of daily development.
 
-The interesting part is not just that it can chat with a model. It is the amount of surface area that stays local and configurable: provider config, keychain credentials, workspace overrides, built-in tools, runtime providers, hooks, prompts, skills, themes, packages, and UI extensions.
+You start wanting boring things: resume a session, switch models, inspect what the agent is doing, stop a bad turn, reload extensions, keep credentials out of random config files, and adapt the runtime to a workspace without forking the app.
+
+Luc is an attempt to make that shape feel native to the terminal.
 
 ## A Terminal UI With Real Controls
 
-The README describes a practical TUI loop: start a session with `luc`, resume one with `luc open <id>`, inspect provider/workspace health with `luc doctor`, reload extensions without restarting, or use `luc rpc` for machine-readable JSON mode.
+The basic loop is intentionally ordinary: start with `luc`, resume with `luc open <id>`, inspect provider and workspace health with `luc doctor`, reload extensions without restarting, or use `luc rpc` for machine-readable JSON mode.
 
-The keybindings are also product decisions. There are shortcuts for the inspector pane, command palette, model switching, session list, extension reload, and stopping a turn. That says Luc is trying to be an everyday tool, not just a demo wrapper around an API.
+The keybindings say a lot about the product. There are shortcuts for the inspector pane, command palette, model switching, session list, extension reload, and stopping a turn. That is the difference between a wrapper and a work surface.
+
+An agent that can edit files and run commands needs controls that feel as immediate as the rest of the terminal.
 
 ## Provider Configuration Should Be Boring
 
-Luc reads user-global config from `~/.config/luc/config.yaml` and `~/.luc/config.yaml`, then merges workspace-local `.luc/config.yaml` on top. The minimal provider shape is OpenAI-compatible: base URL, API key environment variable, and model.
+The provider story follows the same taste. Luc reads user-global config from `~/.config/luc/config.yaml` and `~/.luc/config.yaml`, then merges workspace-local `.luc/config.yaml` on top. The minimal provider shape is OpenAI-compatible: base URL, API key environment variable, and model.
 
-Credentials can come from the environment or the OS keychain. That detail matters because agent tools become annoying fast when every workspace needs a custom secret ritual.
+Credentials can come from the environment or the OS keychain. That detail sounds small until you use a tool every day. Agent workflows become annoying fast when every workspace needs a custom secret ritual.
 
 ## Runtime Extensions
 
-The extension model is the real spine of the project. Luc supports tools, long-lived extension hosts, async hooks, custom providers, UI commands and views, prompt extensions, skills, and themes under `~/.luc` or workspace-local `.luc`.
+The extension model is where Luc becomes more interesting than a local chat client.
+
+Runtime extensions can live under `~/.luc` or workspace-local `.luc`: shell or structured tools, long-lived extension hosts, async hooks, custom providers, UI commands and views, prompt extensions, skills, and themes.
 
 Custom providers can be OpenAI-compatible endpoints or exec adapters that stream JSONL provider events. Shared packages can be installed from GitHub or local paths.
 
-The shape is clear: Luc wants the agent runtime to be programmable without recompiling the binary.
+That means a team can shape the runtime around its own tools without recompiling the binary or waiting for the core app to absorb every idea.
 
 ## The Product Bet
 
-The bet is that a terminal agent should be close to the files and commands it changes, but extensible enough to adapt to a team's workflow. That is a good place to build from.
+The bet is that a terminal agent should stay close to the files and commands it changes, but it should not be closed over one provider, one prompt shape, or one set of tools.
+
+The terminal is already where a lot of development context lives. Luc is trying to make the agent feel like it belongs there.

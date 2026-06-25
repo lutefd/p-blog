@@ -1,6 +1,6 @@
 ---
 title: "Lay and Private Meeting Tools"
-description: "A draft on an always-on-top meeting assistant that stays out of screen sharing."
+description: "Why a meeting assistant should be private, small, and designed around presentation constraints."
 date: "June 24, 2026"
 draft: true
 tags:
@@ -10,22 +10,26 @@ tags:
 project: lay
 ---
 
-Lay is an always-on-top meeting assistant built with Wails and Svelte. The core product detail is specific: it stays off screen capture and sharing.
+Meetings create a strange UI problem: the notes you need are often not the notes you want to show.
 
-That makes it less like a generic notes app and more like a private utility layer for presentations, meetings, quick notes, and AI answers that should not appear to everyone watching the screen.
+During a presentation or customer call, you may want a prompt, a rough answer, a private note, or a quick model response beside the thing you are sharing. But most desktop tools assume that if it is on your screen, it is fair game for the meeting.
+
+Lay starts from the opposite assumption. It is an always-on-top meeting assistant built with Wails and Svelte, and the important product detail is that it stays off screen capture and sharing.
 
 ## A Small Window With Strong Opinions
 
-The app opens as a frameless translucent utility window at the top-right, with a fixed initial and minimum size of `520x360`. On macOS, global hotkeys toggle the window, change opacity, and move it while focused.
+The window is intentionally small and opinionated: frameless, translucent, always on top, opened at the top-right, with `520x360` as both the initial and minimum size.
 
-Those details tell you the product is designed for interruption-heavy use. It should appear quickly, stay out of the way, and become more or less visible without dragging attention away from the meeting.
+On macOS, global hotkeys toggle the window, change opacity, and move it while focused. Those details matter because meeting tools live in interruption time. They should appear quickly, stay out of the way, and become more or less visible without dragging attention away from the call.
 
 ## Notes, AI Chat, And Gateways
 
-Lay stores notes in `~/.lay/notes.md` and config in `~/.lay/config.json`. It includes a notes editor, AI chat, model selection, and support for Anthropic, OpenAI, or a custom Chat Completions-compatible gateway.
+Lay keeps the local pieces simple: notes in `~/.lay/notes.md`, config in `~/.lay/config.json`, a notes editor, AI chat, and model selection.
 
-The gateway support is practical. A team can embed a default gateway at build time or let users override it with `~/.lay/gateway.json`, then route all AI requests through a corporate proxy or model router.
+The gateway support is the more enterprise-shaped part. A team can embed a default gateway at build time or let users override it with `~/.lay/gateway.json`, then route all AI requests through a corporate proxy or model router.
 
-## Why It Works As A Tool
+## The Boundary Is The Product
 
-The interesting part is the boundary: private enough not to leak into screen sharing, simple enough to sit beside a meeting, and configurable enough to fit a company gateway. That is a narrow product shape, which is usually where useful tools live.
+The useful part is not that Lay has notes or chat. Plenty of tools have notes and chat.
+
+The useful part is the boundary: private enough not to leak into screen sharing, small enough to sit beside a meeting, and configurable enough to fit a company gateway. That is a narrow product shape, which is usually where useful tools live.

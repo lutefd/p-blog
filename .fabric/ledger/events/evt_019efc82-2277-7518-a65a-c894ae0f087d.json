@@ -1,0 +1,36 @@
+{
+  "schema_version": "fabric/1.0",
+  "event_id": "evt_019efc82-2277-7518-a65a-c894ae0f087d",
+  "event_type": "record.created",
+  "occurred_at": "2026-06-24T23:00:47.480069-03:00",
+  "actor": {
+    "kind": "human"
+  },
+  "trust": {
+    "level": "human_confirmed",
+    "basis": "human"
+  },
+  "payload": {
+    "record": {
+      "record_id": "rec_019efc82-2277-79b3-949c-11069c1ad72a",
+      "kind": "note",
+      "created_at": "2026-06-24T23:00:47-03:00",
+      "scope": {
+        "repo": "p-blog",
+        "issue": "portfolio-blog-writing-style",
+        "areas": [
+          "content"
+        ]
+      },
+      "source": {
+        "type": "human"
+      },
+      "text": "For this portfolio/blog, keep long-form writing Markdown-first, concise, reflective, and engineering-grounded. Published posts should read like practical essays from Luis, while new project essays can start as polished drafts with draft: true until explicitly published.",
+      "confidence": "human_confirmed",
+      "ttl": "until_issue_closed",
+      "status": "active",
+      "durability": "candidate",
+      "reason": "Future blog drafts and migrations should preserve a consistent voice and publishing model."
+    }
+  }
+}

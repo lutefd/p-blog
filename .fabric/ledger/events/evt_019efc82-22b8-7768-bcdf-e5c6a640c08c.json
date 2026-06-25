@@ -1,0 +1,36 @@
+{
+  "schema_version": "fabric/1.0",
+  "event_id": "evt_019efc82-22b8-7768-bcdf-e5c6a640c08c",
+  "event_type": "record.created",
+  "occurred_at": "2026-06-24T23:00:47.544766-03:00",
+  "actor": {
+    "kind": "human"
+  },
+  "trust": {
+    "level": "human_confirmed",
+    "basis": "human"
+  },
+  "payload": {
+    "record": {
+      "record_id": "rec_019efc82-22b8-7a4d-aa43-31807b9a9922",
+      "kind": "note",
+      "created_at": "2026-06-24T23:00:47-03:00",
+      "scope": {
+        "repo": "p-blog",
+        "issue": "portfolio-blog-visual-style",
+        "areas": [
+          "frontend"
+        ]
+      },
+      "source": {
+        "type": "human"
+      },
+      "text": "For this portfolio/blog, preserve Theo-inspired minimalism: compact homepage, restrained borders, neutral shadcn-style tokens, readable prose, strong project list, no large marketing hero, gradients, music/Jam surfaces, ornamental cards, or runtime GitHub fetching.",
+      "confidence": "human_confirmed",
+      "ttl": "until_issue_closed",
+      "status": "active",
+      "durability": "candidate",
+      "reason": "Future refactors should preserve the intended minimal portfolio direction instead of adding decorative portfolio UI."
+    }
+  }
+}

@@ -1,6 +1,6 @@
 ---
-title: "Lay and Private Meeting Tools"
-description: "Why a meeting assistant should be private, small, and designed around presentation constraints."
+title: "Lay and the Meeting Fog"
+description: "How too many meetings turned into a private note layer, transcript-aware chat, and an always-on-top assistant."
 date: "June 24, 2026"
 draft: true
 tags:
@@ -10,26 +10,76 @@ tags:
 project: lay
 ---
 
-Meetings create a strange UI problem: the notes you need are often not the notes you want to show.
+Lay came from a very ordinary kind of exhaustion.
 
-During a presentation or customer call, you may want a prompt, a rough answer, a private note, or a quick model response beside the thing you are sharing. But most desktop tools assume that if it is on your screen, it is fair game for the meeting.
+I was spending too much time in meetings.
 
-Lay starts from the opposite assumption. It is an always-on-top meeting assistant built with Wails and Svelte, and the important product detail is that it stays off screen capture and sharing.
+Not one dramatic meeting. Not one obviously broken process. Just the slow accumulation of calls, updates, planning sessions, follow-ups, demos, and context switches. By the end of the day, I would remember that something important had been said, but not always where. A decision was in one call. A risk was mentioned in another. A follow-up lived in my notes, unless it lived in chat, unless I forgot to write it down because I was presenting.
 
-## A Small Window With Strong Opinions
+The problem was not that I needed a better notes app.
 
-The window is intentionally small and opinionated: frameless, translucent, always on top, opened at the top-right, with `520x360` as both the initial and minimum size.
+The problem was that meetings create a strange private workspace. You need notes while sharing your screen. You need reminders while someone else is talking. You need to ask a quick question about the meeting without pasting half the meeting into another tool. You need to review what just happened while the next conversation is already starting.
 
-On macOS, global hotkeys toggle the window, change opacity, and move it while focused. Those details matter because meeting tools live in interruption time. They should appear quickly, stay out of the way, and become more or less visible without dragging attention away from the call.
+I wanted a small layer for that.
 
-## Notes, AI Chat, And Gateways
+Private, fast, and aware of the meeting.
 
-Lay keeps the local pieces simple: notes in `~/.lay/notes.md`, config in `~/.lay/config.json`, a notes editor, AI chat, and model selection.
+## Notes That Do Not Become A Performance
 
-The gateway support is the more enterprise-shaped part. A team can embed a default gateway at build time or let users override it with `~/.lay/gateway.json`, then route all AI requests through a corporate proxy or model router.
+Most meeting tools assume the notes are either private documents you manage later or collaborative artifacts everyone can see.
 
-## The Boundary Is The Product
+I wanted something more immediate.
 
-The useful part is not that Lay has notes or chat. Plenty of tools have notes and chat.
+A place to write rough notes while the meeting is happening. A place that can sit on top of everything else. A place that does not appear in screen sharing. A place that is allowed to be messy because it is helping me think, not trying to become the final artifact.
 
-The useful part is the boundary: private enough not to leak into screen sharing, small enough to sit beside a meeting, and configurable enough to fit a company gateway. That is a narrow product shape, which is usually where useful tools live.
+That is why Lay is an always-on-top desktop app instead of a web page. It opens as a small frameless window, stays at the top-right, supports opacity hotkeys, and keeps notes in `~/.lay/notes.md`.
+
+The window behavior matters because the use case is interruption-heavy. You do not want to hunt for the app while presenting. You do not want to reorganize your screen. You want to toggle it, jot the thing down, and get back to the conversation.
+
+## The Assistant Needed The Meeting, Not Just A Prompt
+
+The next step was obvious after using plain notes for a while: sometimes I did not need to write more. I needed to ask the meeting a question.
+
+What did they decide?
+
+What are the open follow-ups?
+
+What did I promise to check?
+
+What context should I carry into the next call?
+
+A generic chat box cannot answer those unless you manually feed it the context. Lay tries to make the meeting itself part of the assistant's working memory.
+
+The app has notes, chat, transcription, voice, and settings as separate tabs. Chat stays mounted so the conversation survives tab switches. Transcription and voice stay mounted so recording can survive tab switches too. On the backend, Lay builds the assistant system prompt from the current transcript or the live transcript segments when recording is active.
+
+That is the real product shape: not "AI chat in a small window," but a meeting-aware assistant that can use the session transcript when answering.
+
+## Why It Has To Stay Private
+
+There is an awkward social detail in this kind of tool: the assistant is useful precisely because it is not part of the meeting surface.
+
+If I am sharing my screen, I do not want my rough notes, half-formed questions, or private assistant prompts visible to everyone. If I am presenting, I may need a reminder or quick answer without turning the call into a live demo of my coping mechanisms.
+
+So Lay's screen-capture behavior is not decoration. It is the boundary that makes the tool usable.
+
+The same goes for the local files. Notes live under `~/.lay`. Config lives under `~/.lay/config.json`. A gateway can be embedded at build time or overridden by the user with `~/.lay/gateway.json`, so a company can route model calls through its own Chat Completions-compatible endpoint.
+
+The app is small, but the privacy boundary is doing a lot of work.
+
+## What I Was Actually Building
+
+I was not trying to replace calendars, docs, or meeting platforms.
+
+I was trying to survive the fog between them.
+
+Lay is the layer I wanted during the day: rough notes, quick review, transcript-aware questions, voice or transcription when needed, and a private assistant that stays out of the shared screen.
+
+The useful part is not any single feature. It is the combination:
+
+- always there;
+- not visible to the meeting;
+- close to my notes;
+- aware of the transcript;
+- fast enough to use while the conversation is still moving.
+
+That is the shape I kept needing between meetings, so that is the shape I built.

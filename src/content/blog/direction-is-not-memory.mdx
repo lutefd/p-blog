@@ -107,7 +107,7 @@ If the system does not know, it should say unknown. Not “probably used,” not
 
 ## The Repository Should Own It
 
-Fabric is the local-first protocol I built around this idea: persistent repository direction and causal provenance across agent threads, worktrees, and tools.
+[Fabric](https://github.com/lutefd/fabric/) is the local-first protocol I built around this idea: persistent repository direction and causal provenance across agent threads, worktrees, and tools.
 
 The first version is intentionally small. No account, no server, no daemon, no database, no LLM call, and no embedding pipeline. Just immutable protocol events stored in repository-controlled places, a CLI as the reference client, and a deterministic way to project scoped direction into work that needs it.
 

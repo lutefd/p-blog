@@ -1,5 +1,5 @@
 ---
-import ProjectFilter from "@/components/ProjectFilter.svelte";
+import ProjectFilter from "@/components/ProjectFilter.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
@@ -19,6 +19,6 @@ const projects = (await getCollection("projects"))
         Selected projects across repository memory, Git workflows, local tools, ledgers, experiments, and small product systems.
       </p>
     </header>
-    <ProjectFilter projects={projects} client:load />
+    <ProjectFilter projects={projects} />
   </section>
 </BaseLayout>

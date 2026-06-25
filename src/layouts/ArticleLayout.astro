@@ -2,10 +2,10 @@
 import BaseLayout from "./BaseLayout.astro";
 import { formatDate } from "@/lib/utils";
 
-const { title, description, date, tags = [], draft = false } = Astro.props;
+const { title, description, date, tags = [], draft = false, slug } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} image={`/og/${slug}.png`} type="article">
   <article class="container py-12 sm:py-16">
     <header class="mb-10 max-w-prose">
       <div class="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">

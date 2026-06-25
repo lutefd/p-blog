@@ -1,0 +1,253 @@
+---
+title: "What An Agent Harness Actually Owns"
+description: "A look at the runtime boundaries around agentic tools: the turn loop, provider adapters, tool execution, extensions, and local trust."
+date: "May 14, 2026"
+draft: false
+tags:
+  - tooling
+  - cli
+  - developer-experience
+project: luc
+---
+
+The model is not the agent.
+
+That sounds obvious, but a lot of agent tooling still behaves as if the important thing is the model call: choose a provider, send a prompt, stream some text, maybe let the model call a tool, then print the result back to the user.
+
+That is enough for a demo.
+
+It is not enough for a tool you trust near a real repository.
+
+The interesting part lives around the model. A user writes something. The runtime decides what context exists. The provider streams back text, reasoning, tool calls, and sometimes stranger events. The local system decides whether those tool calls are allowed to run. The user watches, interrupts, approves, retries, or changes direction. Tool results come back. The model continues. Local state persists. Credentials are handled. Extensions may intercept the loop. The UI has to show enough without becoming noise.
+
+That surrounding loop is not plumbing.
+
+It is the product.
+
+Luc started from that belief. I wanted to understand how little an agent harness actually needed, not as a minimal demo, but as a usable local runtime. The question was not “can I send a prompt to a model?” The question was: what does a harness actually own?
+
+## The Turn Is The Core Unit
+
+An agent harness lives or dies in the turn loop.
+
+A turn is not only a message. It is a sequence of events: request construction, streamed model output, tool-call proposal, local approval, tool execution, result persistence, continuation, cancellation, and display.
+
+That loop has texture.
+
+If the model is thinking but the interface looks frozen, the system feels dead.
+
+If a tool is running but the user cannot tell which tool or why, the system feels unsafe.
+
+If cancellation is slow, the system feels dangerous.
+
+If tool output floods the transcript, both the model and the person lose the thread.
+
+If every provider behaves slightly differently and the harness pretends they are the same, the abstraction leaks through the UI.
+
+A good harness has to make the turn visible enough to trust, but not so visible that the user is buried under mechanics.
+
+That was the first design constraint for Luc: keep the loop close.
+
+A terminal interface helped. Not because terminals are inherently better, but because they force directness. Start a session. Resume one. Switch models. Inspect runtime state. Stop a turn. Reload assets. Check provider health. Run in RPC mode. The interface does not get to hide behind panels and chrome. The loop has to be legible.
+
+Slowness is not only latency. Sometimes a tool feels slow because you cannot tell what it is doing.
+
+## A Tool Call Is A Request
+
+One of the most important boundaries in an agent runtime is also one of the easiest to blur.
+
+A model can ask for a tool call.
+
+That does not mean the tool has run.
+
+That distinction matters because local tools are local authority. They can read files, execute shell commands, talk to services, mutate state, or expose data back to the model. Treating a streamed tool call as “the agent doing something” collapses the boundary between model output and machine action.
+
+Luc keeps that boundary explicit.
+
+The provider can stream a tool-call event. The harness represents it, displays it, applies approval policy, executes it locally if allowed, logs the result, and sends the result back into the conversation. The model proposes. The runtime decides.
+
+That division is especially important when thinking about prompt injection.
+
+It is easy to say “do not trust untrusted text.” It is harder to design the runtime seams that make that advice real.
+
+Can a tool result modify the next prompt?
+
+Can an extension block a tool before it runs?
+
+Can a provider adapter ask the client to do something?
+
+Can a hook mutate active state synchronously?
+
+Can a prompt addition quietly become a policy layer?
+
+A harness needs places to answer those questions. Otherwise “security” becomes a warning label pasted over a muddy architecture.
+
+## Providers Should Be Translators
+
+I wanted provider transport to be boring.
+
+Most agent tools begin with a blessed provider path. Then the exceptions arrive. This model streams differently. This one has reasoning events. This one is OpenAI-compatible except where it is not. This one runs through a gateway. This one is local. This one wants client-side actions. This one has tool-call deltas that arrive in pieces.
+
+If the provider becomes sacred, the whole app bends around it.
+
+Luc treats providers as adapters.
+
+An OpenAI-compatible provider can be mostly configuration: base URL, API key environment variable, model list. A custom provider can be an executable adapter. The adapter receives a JSON request on stdin and streams provider events back as JSONL: text deltas, thinking events, tool calls, client actions, done.
+
+The adapter translates.
+
+It does not own local execution.
+
+That is the important part. Tool representation, approval, execution, logging, and result handling stay inside the harness. The provider can request work, but the local runtime decides what happens on the machine.
+
+This makes experimentation cheaper. A local gateway, a custom model API, a provider-specific event stream, or a future transport does not need to become a rewrite of the application. It only needs to become legible to the runtime.
+
+## Extensions Are Boundaries, Not A Pile Of Hooks
+
+“Make it extensible” is not a design.
+
+Extend what?
+
+At what point in the turn?
+
+With what authority?
+
+Can the extension block execution? Can it mutate state? Can it add prompt context? Can it register tools? Can it run after the turn as a side effect? Can it keep session state? Does failure stop the session or become a diagnostic?
+
+Luc’s extension model became sharper once I stopped treating extensibility as one mechanism.
+
+Different surfaces need different contracts.
+
+Tools are isolated local actions.
+
+Hosted tools are stateful actions owned by a long-lived process.
+
+Providers translate model transport.
+
+Prompt additions add context.
+
+Approval policies inspect local authority before it runs.
+
+Async hooks perform side effects after the critical path.
+
+UI commands and inspector views expose runtime behavior.
+
+Skills, themes, packages, and extension hosts each attach at different seams.
+
+The rule of thumb became simple: if behavior is static registration, use a manifest. If it needs session state, sync interception, or hosted tool execution, use a long-lived extension host. If it is a side effect, keep it async. If it is provider translation, make it a provider adapter.
+
+This kept the core smaller.
+
+More importantly, it kept the boundaries visible.
+
+A hook should not secretly become a policy system. A prompt extension should not quietly mutate tool results. A provider adapter should not become the owner of local execution. A theme should not require a core patch. A planning workflow should not require turning the harness into an IDE.
+
+The goal was not to create a platform for its own sake.
+
+The goal was to stop the experiment from turning into mud.
+
+## Local Layers Make Experiments Cheap
+
+Agent work is repository-shaped.
+
+One project may need custom tools. Another may need a different provider. Another may want strict approvals. Another may carry skills that explain local workflows. Another may want a package that adds a planning surface. Global configuration is useful, but it is not enough.
+
+Luc uses layered runtime lookup: user runtime files, user-installed packages, project-installed packages, and project overrides. Later layers override earlier ones.
+
+A tool can live in `~/.luc`.
+
+A package can bring a provider, theme, skill, hook, or hosted tool.
+
+A workspace can override prompts, approvals, or runtime assets without changing the binary.
+
+`luc reload` picks up changes without restarting the whole application.
+
+That sounds small, but it changes the feel of the system. Experiments stop being precious. You can reshape the harness per repository. You can try a stricter policy for one workspace. You can test a provider adapter without committing to it globally. You can install a workflow package without turning it into core.
+
+The harness stays small because the runtime has honest places for new behavior to live.
+
+## Packages Test The Contract
+
+Themes were the simplest proof.
+
+A theme package is not intellectually grand. That is why it was useful. If a visual layer cannot be distributed, installed, discovered, reloaded, and selected without patching the app, the package model is already too heavy.
+
+The MCP bridge tested the opposite edge. MCP servers can expose dynamic tools from outside Luc’s own runtime. Those tools may read files, call services, mutate systems, or depend on external authentication. They cannot become automatically trusted just because they appear inside the agent.
+
+They need names, descriptions, server identity, metadata, refresh behavior, status, auth handling, and approval policy around them.
+
+The planning package tested a third shape. It added a product-level workflow: a visible plan, an `update_plan` tool, session storage, timeline notes, prompt guidance, and a read-only inspector tab. It did not require changing Luc core. The runtime surfaces were enough.
+
+Those packages made the architecture less theoretical.
+
+Themes proved distribution.
+
+MCP proved dynamic capability boundaries.
+
+Planning proved that a higher-level workflow could be composed from existing surfaces.
+
+That is what I wanted from the harness: not a place that predicts every feature, but a place with enough explicit seams that new behavior has somewhere honest to attach.
+
+## The UI Is Part Of Trust
+
+The terminal surface was not just aesthetic.
+
+A harness needs to show what the runtime is doing. When a provider is slow, the user should know whether the delay is provider transport, model generation, local tool execution, approval, or UI rendering. When something breaks, diagnostics should be near the runtime. When a turn is alive, the interface should make that visible.
+
+Luc became a streaming TUI with resumable sessions, built-in file and shell tools, model switching, an inspector pane, reloadable runtime assets, keychain-backed credentials, layered config, package installation, and machine-readable RPC mode.
+
+None of those pieces are impressive alone.
+
+Together, they make the loop feel close enough to touch.
+
+That was the feeling I wanted. Not a polished transcript hiding the machinery. Not an IDE that owns the whole workspace. A local harness where the runtime remains inspectable.
+
+## What Luc Is
+
+Luc is a terminal agent harness built around these constraints:
+
+keep the loop local;
+
+make runtime behavior visible;
+
+treat providers as replaceable adapters;
+
+keep tool execution under local authority;
+
+let tools, prompts, hooks, UI, skills, themes, packages, and extension hosts load without recompiling.
+
+The commands are plain:
+
+```bash
+luc
+luc open <id>
+luc doctor
+luc reload
+luc rpc
+```
+
+The commands are not the point.
+
+The point is what they imply.
+
+A session can be resumed. Runtime assets can be reloaded. Provider state can be diagnosed. The same harness can be driven by a human TUI or machine-readable RPC. Local tools can be approved, logged, and inspected. Project configuration can override user configuration. Credentials can come from the environment or the OS keychain.
+
+The model is one part of the system.
+
+The harness owns the loop around it.
+
+## The Boundary I Trust
+
+The useful lesson from building Luc was not that every agent tool should be small or terminal-based.
+
+The useful lesson was that the harness matters more than I expected.
+
+A model can generate text. A provider can stream events. A tool can execute. But the harness decides what gets shown, what gets trusted, what gets persisted, what can be interrupted, what can be extended, and where local authority begins.
+
+Those are not secondary details.
+
+They are the product boundary.
+
+A good harness does not make the agent magical. It makes the machinery visible enough that the user can work with it, interrupt it, reshape it, and trust where the line is drawn.
+
+That is still the direction I want to protect.

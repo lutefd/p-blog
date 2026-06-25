@@ -1,0 +1,173 @@
+---
+title: "Direction Is Not Memory"
+description: "Why repeated agent corrections in real repositories need scoped repository direction, not more transcript memory."
+date: "June 24, 2026"
+draft: false
+tags:
+  - agents
+  - tooling
+  - git
+  - software-engineering
+project: fabric
+---
+
+The repository had already answered the question. That was the strange part.
+
+The person doing the work did not know that, and neither did the agent.
+
+A reviewer had explained why a behavior belonged at a shared boundary. The PR had changed direction, the code had merged, and the decision was not imaginary. It existed in the history of the work. Then, a few weeks later, another task reached the same edge from a different package, and an agent proposed the same locally reasonable shortcut.
+
+The organization had learned.
+
+The work did not inherit the learning.
+
+The old decision existed somewhere. It just did not travel.
+
+That failure kept bothering me because it was not quite a documentation problem, not quite an agent orchestration problem, and not quite a memory problem. The team had coordinated. The review had happened. The patch had changed. But the next thread did not inherit the direction.
+
+Software work is becoming more disposable: threads are shorter, attempts are cheaper, agents can run in parallel, and worktrees multiply. A path can be explored, rejected, corrected, and replaced in a single afternoon. But repository knowledge is still trapped in the places where it happened.
+
+## Git Remembers The Patch
+
+Git is excellent at preserving what changed. It can tell you which commit introduced a line, how two branches diverged, what the final diff looked like, and what history led to the current tree. That is necessary, but it is not the same as preserving the direction that shaped the change.
+
+The final patch usually does not preserve the rejected path. It does not tell the next agent that a tempting local shortcut was discussed and avoided. It does not tell a sibling thread that the behavior belongs in a shared layer because three feature paths depend on it. It does not reliably carry the reason a migration is halfway complete and should not be bypassed.
+
+That gap matters more when agents are involved because agents are good at producing tidy local solutions. The code can look reasonable. The tests can pass. The patch can be clean. Then a reviewer says, “we do not do it that way here,” not because of a universal best practice, but because this repository has history.
+
+Git remembers the artifact. It does not always remember the project direction that made the artifact look that way.
+
+## PRs Remember The Argument
+
+Pull requests hold more of the story. They contain comments, suggestions, review threads, CI failures, approvals, links, and sometimes the exact sentence that changed the implementation. A lot of useful direction is born there, in the moment where a reviewer turns a local implementation detail into a reusable project constraint.
+
+But PRs are not a good runtime for future direction. Someone has to know which PR matters. Someone has to search for the right discussion. Someone has to distinguish the reusable decision from the temporary argument around it. Someone has to know whether the comment still applies, whether the migration ended, whether the code actually implemented the decision, and whether the rejected path is still rejected.
+
+That is the important distinction: a PR discussion is where direction often appears, but the discussion itself is not the direction. Most of a PR should not become durable repository knowledge. It includes uncertainty, half-ideas, local negotiation, stale assumptions, and comments that only mattered for that patch.
+
+The reusable piece is usually much smaller:
+
+```
+In this scope, prefer this path.
+This was the rationale.
+This other path was rejected.
+This evidence supports the decision.
+This record is temporary, candidate, or durable.
+```
+
+That object is not a transcript. It is direction.
+
+## More Prompt Is Not The Answer
+
+The obvious fix is to add more instructions. Put the rule in `AGENTS.md`, add it to `CLAUDE.md`, add it to Cursor rules, write a bigger project guide, and make the agent read more before it writes. This works for a while, but eventually the instruction file turns into a museum of old pain.
+
+Every correction goes in. Few come out. Some apply globally. Some apply to one package. Some were temporary. Some were copied from a review nobody remembers. Some are still important, but only under one path. Some look like law but were actually one-off advice. Eventually the useful warning disappears into prompt sediment.
+
+The problem is not that agents need every instruction. They need the right instruction for the work they are about to do. A routing constraint should not burden a CSS task. A temporary migration rule should not become permanent architecture. A package-specific correction should not silently become repository-wide doctrine.
+
+A global prompt file is not scoped repository memory. It is a noticeboard.
+
+## General Memory Is Too Broad
+
+“Memory” sounds close to the answer. Store conversations, store PRs, store review comments, store docs, and retrieve relevant facts later. That is useful for some problems, but it still feels too broad for this one.
+
+A conversation is what happened. A repository direction is the part of what happened that should shape future work. Those are different objects. Most of a thread should not be replayed into future tasks because it may include brainstorming, wrong assumptions, abandoned plans, private context, temporary constraints, and implementation details that stopped mattering the moment the branch changed.
+
+Remembering more is not automatically better. In software engineering, the useful memory is often small, scoped, normative, and lifecycle-aware. It does not only say “this happened.” It says “in this scope, this should guide future work.”
+
+That is the missing primitive.
+
+## Direction Has Scope
+
+Large repositories do not have one truth. They have local truths. Routing has its rules, caching has its constraints, build tooling has its weird edge cases, and product workflows have assumptions that make no sense outside their area. One package may be in the middle of a migration. Another may intentionally avoid a shared abstraction because it has different latency requirements. A rule can be obvious in one path and harmful in another.
+
+So direction needs a boundary. A useful record can be scoped to a repository, issue, PR, configured area, path, or, rarely, the whole project. Then a thread can declare what it is working on and receive the active records that match that scope.
+
+That matching should not depend on the model guessing what feels relevant. It should not require embedding search through old transcripts. It should not ask an agent to rummage through a memory pile and decide which past pain matters today. Given the same records, scope, configuration, receipts, and budget, the same direction should be selected.
+
+That is boring in the right way. The system should be deterministic where the work needs determinism, and small enough that people can inspect why a record was projected into a thread.
+
+## Direction Has A Lifecycle
+
+Not every direction should become law. Some records are live coordination, useful while sibling threads are active. Some are candidates, probably reusable but not yet confirmed. Some are durable because they were promoted after review or human confirmation. Some expire, some get challenged, and some conflict.
+
+That lifecycle is part of the object. Without it, the repository accumulates stale rules until future agents become worse, not better. A direction system should make capture cheap, but promotion deliberate.
+
+Agents can propose candidate records. Tools can mine PRs. Review workflows can suggest reusable direction. But durable promotion should stay human- or reviewer-confirmed. The point is not to turn every sentence into law. The point is to preserve the rare sentence that future work should not have to rediscover.
+
+## Availability Is Not Causality
+
+One thing I wanted to avoid was explanation theater. A system should not claim that a rule caused a change just because the rule was somewhere in the context window.
+
+A useful provenance view needs to separate availability from causality. It can say that a direction existed, matched the thread scope, was delivered, and was exposed to the model. Those are availability claims. They matter, but they do not prove influence.
+
+Causality is a stronger claim. If an action explicitly declares that it was informed by a direction, or if a commit explicitly declares that it implements a direction, the system can record that relation. But those claims should not be inferred from text similarity. They should not be guessed from the final diff. They should be explicit causal relations asserted by an adapter, actor, commit, or tool.
+
+If the system does not know, it should say unknown. Not “probably used,” not “semantically related,” and not “likely influenced.” Unknown. That makes the system less magical and more trustworthy.
+
+## The Repository Should Own It
+
+Fabric is the local-first protocol I built around this idea: persistent repository direction and causal provenance across agent threads, worktrees, and tools.
+
+The first version is intentionally small. No account, no server, no daemon, no database, no LLM call, and no embedding pipeline. Just immutable protocol events stored in repository-controlled places, a CLI as the reference client, and a deterministic way to project scoped direction into work that needs it.
+
+Candidate and durable records live in a tracked ledger. Live records can coordinate active work through shared Git runtime state. Generated Markdown exists for humans, but it is not the source of truth. The protocol is the important part. The CLI is only the first client.
+
+I wanted Codex, Claude, IDE agents, CI tools, review systems, and future agent platforms to be able to point at the same repository decision graph without one provider owning the memory layer. Provider objects stay opaque. A message is still owned by the provider. A PR is still owned by GitHub. A commit is still Git. Fabric keeps references and relations, not private transcripts.
+
+## A Direction Record Is Small
+
+A useful Fabric record is compact. It does not contain the whole conversation, it does not contain a patch, and it does not try to become a second Git history. It says something closer to:
+
+```
+In this scope, prefer this direction.
+This was the rationale.
+This tempting alternative was rejected.
+This evidence explains why.
+This record is live, candidate, or durable.
+```
+
+A basic flow looks like this:
+
+```
+fabric thread start --issue VS-123 --area virtual-store/listing \
+  --path 'internal/listing/**'
+
+fabric preflight "add listing filters" --issue VS-123 \
+  --area virtual-store/listing --path 'internal/listing/**'
+
+fabric note --candidate --reason "The shared endpoint owns pagination semantics" \
+  "Extend the existing listing endpoint instead of creating another one."
+
+fabric sync
+```
+
+The command syntax is not the interesting part. The loop is.
+
+A correction happens once. It becomes a compact scoped record. A related thread receives it before acting. Later, if an action or commit implements it, that relationship can be recorded explicitly. Now the repository can answer a question Git alone usually cannot: what direction was available before this change, what evidence supported it, whether it was merely exposed to the model, whether the action explicitly claimed it was causal, and which rejected path this work was supposed to avoid.
+
+## Conflicts Should Be Visible
+
+Parallel work changes the storage model. If multiple worktrees can write direction, the system cannot silently resolve conflicts by picking the newest file. That would hide the exact disagreement it should surface.
+
+So every mutation is an immutable event. A record is created once. Lifecycle changes append child events. If two lifecycle changes extend the same parent, that is a conflict. A reader reports the competing children instead of picking a winner by timestamp, file order, or ID order.
+
+That matters because disagreement is not a storage bug. If one thread says old direction is expired and another says it is still active, that is repository state. A human may need to decide. The system should not quietly paper over it.
+
+## Capture Is The Hard Part
+
+Writing event files is not the hard part. The hard part is deciding what deserves to become repository direction.
+
+Most comments do not. Most agent observations do not. Some review feedback is too specific. Some findings are wrong. Some constraints expire. Some rules are preferences pretending to be architecture. Capture has to be sparse and reviewable because the system becomes worse if every sentence turns into durable knowledge.
+
+That is the boundary I care about most. Fabric should not become a transcript archive. It should not become an AI summarizer that fills the repository with junk. It should not become a provider-specific memory plugin. And it should not become an orchestration platform too early.
+
+Worktrees, cloud sandboxes, remote agents, CI jobs, and merge planners are higher layers. The core should stay smaller: repository direction should be scoped, lifecycle-aware, portable, and causally traceable.
+
+## The Repository Should Not Start Over
+
+The thing I want to prove is simple: can a thread avoid a bad path because another thread already paid to discover it?
+
+If yes, Fabric is worth continuing. Not because agents need to sound like they remember the repository, but because the repository should not have to start over every time a new thread begins.
+
+Git remembers what changed. PRs remember where people argued. Transcripts remember what was said. Fabric is for the smaller, sharper thing that should survive all three: the direction future work should inherit.

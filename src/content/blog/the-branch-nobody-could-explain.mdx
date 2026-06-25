@@ -1,0 +1,237 @@
+---
+title: "The Branch Nobody Could Explain"
+description: "How large-repo branch chaos turned into a local-first way to declare dependencies and build integration branches."
+date: "April 24, 2026"
+draft: false
+tags:
+  - git
+  - cli
+  - workflow
+project: weaver
+---
+
+The integration branch looked fine.
+
+That was the problem.
+
+It built. The diff was not obviously wrong. The branch name made sense. The test environment was pointed at something that looked like the combined feature state. Everyone remembered, more or less, that a few PRs had to be tested together.
+
+Then someone noticed a behavior was missing.
+
+Not a huge thing. Not the sort of failure that announces itself immediately. Just one small piece that lived in a branch everyone had mentally included, but nobody had actually composed into the integration branch.
+
+The work was not broken because Git could not represent it.
+
+The work was broken because the shape of the work lived in memory.
+
+## What Git Could Tell Us
+
+Git could answer many questions.
+
+It could show the commits in the branch. It could show the diff against main. It could show merge bases, conflicts, remotes, reflogs, and file history. It could tell us exactly what was present.
+
+That is necessary, but it is not the same as meaning.
+
+The question we needed to answer was different: what was this branch supposed to represent?
+
+Not what commits were in it. Not what files changed. What was the intended composition? Which source branches were supposed to be included? Which dependencies were review dependencies? Which dependencies were validation dependencies? Which branch existed only to get the test environment into a deployable state? Which conflict resolution was intentional? Which piece had been skipped?
+
+Git can support the workflow. It does not remember the meaning of the workflow unless we give that meaning somewhere to live.
+
+That missing layer is where the trouble started.
+
+## The Work Was Stacked, But Not Like The Diagram
+
+The awkward part was that the work really was stacked.
+
+One branch needed another branch's API shape. Another needed shared types. Another needed a feature flag. Another needed the database migration. Another needed a compatibility fix because the full system was halfway between old and new behavior.
+
+On a clean diagram, this becomes a staircase. Branch B sits on Branch A. Branch C sits on Branch B. Each PR points neatly to the previous one. Review follows the stack. Merge follows the stack.
+
+The world is kind.
+
+That was not the workflow.
+
+In the real repository, some branches were reviewable on their own but only meaningful when validated with three others. Some branches existed mostly for test environments. Some dependencies were temporary. Some PRs had already been opened, which made history rewriting more expensive. Some branches depended on a backend change but not on the frontend branch that happened to sit nearby. Some branches needed to be composed together for E2E, even though review needed them split apart.
+
+The review graph and the validation graph were not the same graph.
+
+That distinction matters. When the distinction is not explicit, people treat one graph as if it were the other. A branch that is clean for review gets mistaken for a deployable state. An integration branch that is useful for testing starts looking like a source of truth. A dependency that only exists locally gets lost because the remote platform does not know it exists.
+
+The stack stops being a neat shape.
+
+It becomes local orchestration state pretending to be memory.
+
+## The Failure Modes Were Boring
+
+Nothing failed in a cinematic way.
+
+A PR was forgotten in the middle of the chain. The integration branch looked fine until the test environment missed a behavior that only existed in that forgotten branch.
+
+A conflict was resolved quickly because everyone had context fatigue. The code compiled. The diff looked acceptable. Later, an end-to-end test failed because one critical line had disappeared during resolution.
+
+A branch was rebased onto the wrong parent. Not catastrophically wrong. Just wrong enough that another branch now carried duplicated changes, missed a dependency, or made review harder than necessary.
+
+Someone recreated an integration branch manually but skipped one of the pieces because the dependency lived in Slack, in a PR comment, or in someone's head. Someone else fixed the same conflict in a slightly different way.
+
+None of this felt dramatic.
+
+It felt like losing afternoons.
+
+The problem with stacked branches was not the stack. The problem was everything around it.
+
+## Remote Metadata Was Not Enough
+
+It is tempting to solve this by making the remote platform smarter.
+
+Stacked PR metadata. Labels. Naming conventions. PR descriptions. Checklists. Comments. Branch protection. Automation. All of that can help, but it still felt like the wrong source of truth for this particular problem.
+
+The branches are local before they are PRs. The dependency relationship matters before review is opened. The integration branch may exist only to deploy a test environment. The compose recipe may change faster than PR metadata. Sometimes the review graph and the validation graph are simply different graphs.
+
+I wanted the local repository to know the shape.
+
+Not GitHub.
+
+Not a branch naming convention.
+
+Not a checklist someone had to remember to update.
+
+The local repo.
+
+## The Missing Object Was A Declared Dependency
+
+Once I stopped trying to force the workflow into a hosted stacked PR model, the abstraction got smaller.
+
+I needed a way to declare a few plain facts:
+
+```
+this branch depends on that branch
+this branch should be synced after its parent
+this group of branches should be composed onto this base
+this integration recipe should be saved
+this generated integration branch came from that recipe
+```
+
+That is not "manage all review."
+
+That is local orchestration state.
+
+The important part is that the dependency graph becomes explicit. Not inferred from branch names. Not reconstructed from PRs. Not held in someone's head.
+
+Declared.
+
+That became Weaver.
+
+## Weaver Remembers What The Work Means
+
+Weaver is a local-first CLI for managing stacked Git branches without requiring GitHub metadata, PR conventions, or external services. It stores branch relationships in `.git/weaver/`, keeps them out of the committed tree, and uses regular Git commands underneath so the workflow stays inspectable.
+
+The first loop is dependency management:
+
+```
+weaver stack feature-b --on feature-a
+weaver deps feature-b
+weaver status
+weaver sync feature-b
+```
+
+Declare the dependency. Inspect the graph. Check the health. Sync in dependency order.
+
+The second loop is validation:
+
+```
+weaver integration save preview --base main feature-a feature-b feature-c
+weaver compose --integration preview --dry-run
+weaver compose --integration preview --create preview-branch
+```
+
+Save the recipe. Test the composed state. Create an integration branch when a test environment needs something deployable.
+
+The commands are not the interesting part.
+
+The interesting part is that the local repository now has vocabulary for the workflow I kept doing manually: dependencies, groups, saved integrations, composed branches, update, sync, doctor, continue, abort, export, import.
+
+Git still does the work.
+
+Weaver remembers what the work is supposed to mean.
+
+## Compose Is Not Sync
+
+One design detail matters a lot: Weaver does not pretend every operation is the same.
+
+Refreshing a branch from upstream is not the same as syncing it with its parent. Syncing a stack is not the same as composing a deployable integration branch. Reviewing a PR is not the same as validating the combined feature in a test environment.
+
+So the commands separate those jobs.
+
+`weaver update` fetches and fast-forwards local branches from their configured upstream refs. It does not decide how stack parents should flow into children.
+
+`weaver sync` applies dependency order. By default it can keep the clean stacked-diff workflow with rebase, but merge-based sync exists for branches that already have open PRs, review comments, or other consumers where rewriting history would be painful.
+
+`weaver compose` builds the combined state. By default it is ephemeral. When needed, it can create or update an integration branch. Saved integration strategies live separately because "these branches together on this base" is its own piece of workflow state.
+
+That separation came directly from the chaos.
+
+When these actions blur together, people make dangerous assumptions. Someone thinks they refreshed from upstream, but they actually rewrote a child branch. Someone thinks they validated the stack, but they only synced one review branch. Someone thinks an integration branch is a source of truth, when really it is just a materialized result of a recipe.
+
+The tool is not trying to make Git clever.
+
+It is trying to stop different Git tasks from wearing the same costume.
+
+## Safety Is Remembering The Attempt
+
+The scary part isn't that Git can merge badly.
+
+The scary part is not knowing which merge happened.
+
+A conflict resolution can delete one small critical piece of code. A compose attempt can skip a branch. A sync can leave the repository on a different branch than the one you thought you were working from. A broken integration branch can stay around and look more official than it is.
+
+So Weaver's safety model is boring and explicit.
+
+Mutating Git commands are printed before execution. Sync state is persisted before each step. `weaver abort` restores the original branch. Compose is ephemeral by default. Compose failures report the branch that failed and the conflicting files. Integration branches created by compose can be listed and deleted later. Saved integrations can be inspected and diagnosed.
+
+None of this makes Git conflict-free.
+
+That would be fantasy.
+
+It makes the workflow less dependent on memory when conflicts happen.
+
+## Why The State Is Local
+
+Weaver does not try to become the remote source of truth.
+
+The state lives where the orchestration is happening: inside the local repository, under `.git/weaver/`. Dependencies live there. Groups live there. Saved integration strategies live there. Resume state for in-progress sync operations lives there.
+
+The committed tree does not get polluted with workflow experiments, but the clone still has enough memory to repeat the local work.
+
+That tradeoff feels right for the problem. Some orchestration state is too temporary or personal to commit. Some of it is too important to leave in someone's head. Weaver sits in that middle space: local, explicit, inspectable, and portable when needed.
+
+If another clone needs the same orchestration state, it can be exported and imported. If a group of branches becomes a recurring validation shape, it can become a named integration. If an integration branch was generated and is no longer useful, it can be listed and deleted.
+
+The goal is not to make every branch relationship official forever.
+
+The goal is to stop pretending unofficial branch relationships do not exist.
+
+## What The Branch Should Have Said
+
+The original failure was not that someone forgot how Git worked.
+
+It was that the branch could not explain itself.
+
+It could not say:
+
+```
+I was composed from these branches.
+I was based on this ref.
+I exist for this validation shape.
+I skipped this branch.
+This conflict happened here.
+This generated branch came from that saved recipe.
+```
+
+Those are not Git facts in the usual sense. They are workflow facts. But in a large repository, workflow facts decide whether a test environment is meaningful, whether a review is clean, and whether a conflict resolution preserved the behavior people thought it did.
+
+That is the piece I wanted Weaver to preserve.
+
+Not stacked PRs as a perfect ideology.
+
+Stacked work as it actually happens when the repository is large, the branches are many, and the test environment needs the whole thing today.

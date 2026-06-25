@@ -1,0 +1,40 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { formatDate } from "@/lib/utils";
+
+const posts = (await getCollection("blog"))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Writing" description="Essays and notes by Luis Dourado.">
+  <section class="container py-12 sm:py-16">
+    <header class="mb-8">
+      <h1 class="text-3xl font-semibold tracking-normal">Writing</h1>
+      <p class="mt-3 max-w-prose text-sm leading-6 text-muted-foreground">
+        Essays about backend systems, platform work, software delivery, and the little decisions that compound.
+      </p>
+    </header>
+    <div class="grid gap-3">
+      {
+        posts.map((post) => (
+          <a class="rounded-md border border-border p-4 no-underline transition-colors hover:bg-muted" href={`/blog/${post.slug}`}>
+            <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+              <h2 class="font-medium">{post.data.title}</h2>
+              <time class="text-sm text-muted-foreground" datetime={post.data.date.toISOString()}>
+                {formatDate(post.data.date)}
+              </time>
+            </div>
+            <p class="mt-2 text-sm leading-6 text-muted-foreground">{post.data.description}</p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              {post.data.tags.map((tag) => (
+                <span class="rounded bg-muted px-2 py-1 text-xs text-muted-foreground">{tag}</span>
+              ))}
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

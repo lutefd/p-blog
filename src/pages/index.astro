@@ -1,0 +1,86 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { formatDate } from "@/lib/utils";
+import { site } from "@/lib/site";
+
+const projects = (await getCollection("projects"))
+  .filter((project) => project.data.featured)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title))
+  .slice(0, 4);
+
+const posts = (await getCollection("blog"))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <section class="container py-14 sm:py-20">
+    <div class="max-w-2xl">
+      <p class="text-sm font-medium text-muted-foreground">Senior software engineer from Brazil.</p>
+      <h1 class="mt-4 text-3xl font-semibold leading-tight tracking-normal sm:text-5xl">
+        I build backend systems, developer tools, infra, and product experiences that age well.
+      </h1>
+      <p class="mt-5 text-base leading-7 text-muted-foreground">
+        This is a small home for my work, notes, and essays about software: the parts that run in production,
+        the tools that shape how teams think, and the product judgment between them.
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a class="button button-primary" href="/work">Selected work</a>
+        <a class="button" href="/blog">Read writing</a>
+        <a class="button" href={site.links.github}>GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container pb-12">
+    <div class="mb-5 flex items-end justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-semibold">Featured projects</h2>
+        <p class="mt-1 text-sm text-muted-foreground">Small, durable systems over portfolio theater.</p>
+      </div>
+      <a class="text-sm text-muted-foreground hover:text-foreground" href="/work">all work</a>
+    </div>
+    <div class="grid gap-3">
+      {
+        projects.map((project) => (
+          <a class="rounded-md border border-border p-4 no-underline transition-colors hover:bg-muted" href="/work">
+            <div class="flex flex-wrap items-center gap-2">
+              <h3 class="font-medium">{project.data.title}</h3>
+              <span class="rounded border border-border px-2 py-0.5 text-xs text-muted-foreground">
+                {project.data.status}
+              </span>
+            </div>
+            <p class="mt-2 text-sm leading-6 text-muted-foreground">{project.data.description}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="container pb-16">
+    <div class="mb-5 flex items-end justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-semibold">Latest writing</h2>
+        <p class="mt-1 text-sm text-muted-foreground">Notes on systems, tools, and engineering taste.</p>
+      </div>
+      <a class="text-sm text-muted-foreground hover:text-foreground" href="/blog">all writing</a>
+    </div>
+    <div class="grid gap-3">
+      {
+        posts.map((post) => (
+          <a class="rounded-md border border-border p-4 no-underline transition-colors hover:bg-muted" href={`/blog/${post.slug}`}>
+            <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+              <h3 class="font-medium">{post.data.title}</h3>
+              <time class="text-sm text-muted-foreground" datetime={post.data.date.toISOString()}>
+                {formatDate(post.data.date)}
+              </time>
+            </div>
+            <p class="mt-2 text-sm leading-6 text-muted-foreground">{post.data.description}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,24 @@
+---
+import ProjectFilter from "@/components/ProjectFilter.svelte";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const projects = (await getCollection("projects"))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.title.localeCompare(b.data.title))
+  .map((project) => ({
+    slug: project.slug,
+    ...project.data,
+  }));
+---
+
+<BaseLayout title="Work" description="Selected projects by Luis Dourado.">
+  <section class="container py-12 sm:py-16">
+    <header class="mb-8">
+      <h1 class="text-3xl font-semibold tracking-normal">Work</h1>
+      <p class="mt-3 max-w-prose text-sm leading-6 text-muted-foreground">
+        Selected projects across repository memory, Git workflows, local tools, ledgers, experiments, and small product systems.
+      </p>
+    </header>
+    <ProjectFilter projects={projects} client:load />
+  </section>
+</BaseLayout>

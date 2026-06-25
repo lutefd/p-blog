@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 99%;
+    --foreground: 220 15% 12%;
+    --muted: 210 18% 96%;
+    --muted-foreground: 220 9% 42%;
+    --accent: 174 33% 94%;
+    --accent-foreground: 180 40% 18%;
+    --primary: 220 15% 12%;
+    --primary-foreground: 0 0% 98%;
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
+    --ring: 184 35% 38%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply bg-background text-foreground;
+    color-scheme: light;
+    font-feature-settings:
+      "liga" 1,
+      "calt" 1;
+  }
+
+  body {
+    @apply min-h-screen bg-background font-sans antialiased;
+  }
+
+  a {
+    @apply underline-offset-4;
+  }
+
+  ::selection {
+    @apply bg-accent text-accent-foreground;
+  }
+}
+
+@layer components {
+  .container {
+    @apply mx-auto w-full max-w-3xl px-5 sm:px-6;
+  }
+
+  .button {
+    @apply inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-3 text-sm font-medium no-underline transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  .button-primary {
+    @apply border-primary bg-primary text-primary-foreground hover:bg-foreground/90;
+  }
+
+  .prose {
+    @apply max-w-prose text-[15px] leading-7 text-foreground;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3 {
+    @apply scroll-m-20 font-semibold tracking-normal text-foreground;
+  }
+
+  .prose h1 {
+    @apply mt-0 text-3xl leading-tight;
+  }
+
+  .prose h2 {
+    @apply mt-10 border-t border-border pt-8 text-xl;
+  }
+
+  .prose h3 {
+    @apply mt-8 text-lg;
+  }
+
+  .prose p,
+  .prose ul,
+  .prose ol,
+  .prose blockquote {
+    @apply my-5;
+  }
+
+  .prose ul {
+    @apply list-disc pl-5;
+  }
+
+  .prose ol {
+    @apply list-decimal pl-5;
+  }
+
+  .prose li {
+    @apply my-2 pl-1;
+  }
+
+  .prose a {
+    @apply font-medium underline decoration-border hover:decoration-foreground;
+  }
+
+  .prose code {
+    @apply rounded bg-muted px-1.5 py-0.5 text-[0.9em];
+  }
+
+  .prose pre {
+    @apply my-6 overflow-x-auto rounded-md border border-border bg-foreground p-4 text-sm text-background;
+  }
+
+  .prose pre code {
+    @apply bg-transparent p-0 text-inherit;
+  }
+}

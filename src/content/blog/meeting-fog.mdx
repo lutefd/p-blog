@@ -1,0 +1,222 @@
+---
+title: "The Meeting Fog"
+description: "How too many meetings turned into a private note layer, transcript-aware chat, and an always-on-top assistant."
+date: "March 2026"
+draft: true
+tags:
+  - meetings
+  - desktop
+  - tooling
+project: lay
+---
+
+I did not notice the meetings getting out of hand all at once.
+
+That is not how it usually happens.
+
+It was more like a slow fog. A planning call in the morning. A sync before lunch. A customer conversation. A follow-up. A demo. A "quick one" that was not quick. A decision made in passing. A risk mentioned by someone who had to drop early. A task I promised to check after the call, assuming I would remember it because it felt obvious at the time.
+
+Then the next meeting started.
+
+By the end of the day, I had fragments everywhere.
+
+Some notes were in a document. Some were in chat. Some were in my head. Some were in a meeting recording I was not going to rewatch. Some were never written down because I was presenting and did not want everyone to see the private scratchpad beside the thing I was sharing.
+
+The problem was not that I needed a better note-taking ritual.
+
+The problem was that meetings create a private workspace that most tools do not acknowledge.
+
+You need to think while other people are talking.
+
+You need to write rough notes that are not ready to become shared notes.
+
+You need to keep track of what was said while still participating.
+
+You need to ask "what did they decide?" while the next call is already beginning.
+
+And if you are sharing your screen, the notes you need are often exactly the notes you do not want to show.
+
+## Notes While Performing
+
+There is a strange performance aspect to meetings.
+
+When you are presenting, your screen becomes part of the room. Every window is suddenly a stage prop. Every notification is a risk. Every private note has to either disappear or become presentable.
+
+That changes how you take notes.
+
+You stop writing the messy version.
+
+You avoid opening the tool that might show something unrelated.
+
+You keep the reminder in your head because switching windows feels too visible.
+
+Then, later, you try to reconstruct the meeting from memory and a few polite bullet points.
+
+That is a bad trade.
+
+The useful notes are often ugly. They are partial sentences, names, question marks, "ask about this later," "check logs," "do not forget the customer constraint," "this sounds like a rollback risk." They are not a document. They are a temporary thinking surface.
+
+I wanted that surface to be private by default.
+
+Not hidden because it was secret in a dramatic way. Hidden because it was not part of the meeting.
+
+## The Window Had To Behave Differently
+
+Once I framed the problem that way, a normal web app felt wrong.
+
+A browser tab is easy to lose. A document is too heavy. A normal desktop window gets buried. A floating note app may still show up in screen sharing. A full meeting assistant is often trying to become the meeting, not sit beside it.
+
+The shape I wanted was smaller:
+
+- always on top;
+- quick to toggle;
+- small enough to sit at the edge of attention;
+- able to change opacity;
+- private from screen capture;
+- local by default.
+
+That led to a desktop utility window: frameless, translucent, top-right, with a fixed small size and hotkeys for toggling and opacity.
+
+Those details sound cosmetic until you are actually in a call.
+
+If the window is too large, it competes with the meeting.
+
+If it is not always on top, it disappears at the exact moment you need it.
+
+If it shows in screen sharing, you stop trusting it.
+
+If it takes too long to open, you do not use it.
+
+Meeting tools live in interruption time. The interaction has to be almost throwaway.
+
+## The Notes Were Only Half The Problem
+
+After the first version of the idea, the next frustration became obvious.
+
+Writing notes helped, but it did not solve the review problem.
+
+After a meeting, I still had to answer:
+
+What actually happened?
+
+What did I commit to?
+
+What should I carry into the next call?
+
+What did someone mention once that will matter later?
+
+Plain notes only answer those questions if I wrote the right thing down in the moment. But the whole problem is that the moment is busy. You are listening, speaking, debugging, deciding, presenting, or waiting for the right time to ask a question.
+
+So the assistant needed more than a chat box.
+
+It needed the meeting.
+
+Not as a vague feature claim. As actual working context: transcript when available, live segments while recording, and the ability to answer from the session rather than from a blank prompt.
+
+That changed the product from "private notes" to "meeting-aware private workspace."
+
+## The Assistant Needed A Memory Of The Room
+
+A generic assistant is useful until you ask it something about the last thirty minutes.
+
+Then it needs context.
+
+You can paste notes into a chat box, but that breaks the flow. You can upload a transcript later, but that turns review into another task. You can rely on meeting-platform summaries, but they often miss the exact private questions you care about.
+
+I wanted the assistant to sit close enough to the meeting that context could be automatic.
+
+The app grew into separate surfaces: notes, chat, transcription, voice, and settings. Chat stays mounted so the conversation survives tab switches. Transcription and voice stay mounted so recording can survive tab switches too.
+
+On the backend, the important detail is the system prompt. When there is a current transcript, the assistant receives it as meeting context. When a recording is active, live transcript segments are joined and included as incomplete context.
+
+That means a question like "what did I promise to follow up on?" can be grounded in the session instead of answered from vibes.
+
+This is the point where the assistant stops being a generic model window.
+
+It becomes a tool for the meeting fog.
+
+## Local Files, Local Trust
+
+The local storage choices were part of the same instinct.
+
+Notes live in `~/.lay/notes.md`. Config lives in `~/.lay/config.json`. A gateway can be embedded at build time or overridden by a user-level `~/.lay/gateway.json`. The model can be Anthropic, OpenAI, or a Chat Completions-compatible gateway.
+
+That sounds like implementation detail, but it changes how the tool fits into a workday.
+
+If a company has a gateway, the app can route through it. If a user just wants a local notes file, the notes are a Markdown file in a predictable place. If the model configuration changes, it is not welded to the UI.
+
+The app is not trying to own all meeting knowledge forever.
+
+It is trying to give the person in the meeting a reliable private layer.
+
+## Then It Became Lay
+
+That is when the thing became Lay.
+
+An always-on-top meeting assistant built with Wails and Svelte. A small desktop layer with notes, chat, transcription, voice, settings, gateway routing, and screen-capture avoidance.
+
+The name is less important than the boundary.
+
+It is not trying to replace the calendar.
+
+It is not trying to become the company meeting archive.
+
+It is not trying to produce a perfect official summary.
+
+It is the layer beside the meeting: the rough notes, the quick question, the live transcript, the reminder that should not be visible to everyone else on the call.
+
+That is why the screen-sharing behavior matters so much. If the private layer leaks into the public surface, the whole thing becomes unusable.
+
+## What I Learned
+
+The first thing I learned is that meeting tooling is mostly about transitions.
+
+Before the meeting, you need context.
+
+During the meeting, you need a private scratchpad and fast recall.
+
+After the meeting, you need review and follow-up extraction.
+
+Between meetings, you need to not lose the thread.
+
+Most tools are good at one of those moments and awkward at the others.
+
+The second thing I learned is that privacy is not an advanced feature.
+
+For this kind of tool, privacy is table stakes. Not because every note is sensitive, but because the notes are pre-social. They are not ready for the room. They are the messy layer that helps you stay present.
+
+The third thing I learned is that an assistant becomes much more useful when it has the right nearby context.
+
+Not a giant knowledge base.
+
+Not every meeting ever.
+
+Just the transcript and notes from the thing you are currently trying to understand.
+
+That is enough to change the feeling from "ask a model" to "ask the meeting."
+
+## Where This Goes
+
+I still think the interesting version is small.
+
+The temptation with meeting software is to keep expanding: calendar integration, task management, shared notes, team workspaces, dashboards, analytics, recordings, summaries, action item pipelines.
+
+Some of that can be useful.
+
+But the core problem I cared about was smaller and more personal:
+
+Can I stay oriented through too many meetings?
+
+Can I keep rough notes without performing them?
+
+Can I review what just happened before the next call eats the context?
+
+Can an assistant answer from the meeting without making me stop and feed it the meeting?
+
+Can the tool stay private enough that I actually use it while sharing my screen?
+
+That is the shape worth protecting.
+
+The goal is not to make meetings magical.
+
+The goal is to make them less lossy.

@@ -1,0 +1,36 @@
+{
+  "schema_version": "fabric/1.0",
+  "event_id": "evt_019efc97-198d-7107-86ba-19e73e14757d",
+  "event_type": "record.created",
+  "occurred_at": "2026-06-24T23:23:41.453686-03:00",
+  "actor": {
+    "kind": "human"
+  },
+  "trust": {
+    "level": "human_confirmed",
+    "basis": "human"
+  },
+  "payload": {
+    "record": {
+      "record_id": "rec_019efc97-198d-79c2-bfc0-c62905635673",
+      "kind": "note",
+      "created_at": "2026-06-24T23:23:41-03:00",
+      "scope": {
+        "repo": "p-blog",
+        "issue": "project-essay-naming-depth",
+        "areas": [
+          "content"
+        ]
+      },
+      "source": {
+        "type": "human"
+      },
+      "text": "Project essays should use narrative titles and slugs that describe the problem, not the project name. Introduce the project name only after the motivation and abstraction have formed, and avoid repeatedly naming the project in body copy. Drafts should be closer in depth and arc to The Repository Forgot, not short project blurbs.",
+      "confidence": "human_confirmed",
+      "ttl": "until_issue_closed",
+      "status": "active",
+      "durability": "candidate",
+      "reason": "User corrected that project essays should mirror The Repository Forgot by avoiding repeated project branding in title, slug, and body, and by going deeper."
+    }
+  }
+}

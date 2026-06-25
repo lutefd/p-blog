@@ -45,13 +45,20 @@ const ogImageUrl = new URL(image, site.url).href;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="twitter:image:alt" content={title} />
+    <meta name="color-scheme" content="light dark" />
     <script is:inline>
       (function () {
+        const storedTheme = localStorage.getItem("theme");
         const theme =
-          localStorage.theme ||
+          storedTheme ||
           (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+
+        document.documentElement.style.colorScheme = theme;
+
         if (theme === "dark") {
           document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
         }
       })();
     </script>

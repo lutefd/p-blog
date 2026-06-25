@@ -50,6 +50,13 @@
     const root = document.documentElement;
     const sun = toggle?.querySelector(".sun");
     const moon = toggle?.querySelector(".moon");
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+    function setTheme(theme: "light" | "dark") {
+      root.classList.toggle("dark", theme === "dark");
+      root.style.colorScheme = theme;
+      updateIcons();
+    }
 
     function updateIcons() {
       const isDark = root.classList.contains("dark");
@@ -61,9 +68,16 @@
 
     toggle?.addEventListener("click", () => {
       const isDark = root.classList.contains("dark");
-      root.classList.toggle("dark", !isDark);
-      localStorage.theme = isDark ? "light" : "dark";
-      updateIcons();
+      const theme = isDark ? "light" : "dark";
+
+      localStorage.setItem("theme", theme);
+      setTheme(theme);
+    });
+
+    systemTheme.addEventListener("change", (event) => {
+      if (localStorage.getItem("theme")) return;
+
+      setTheme(event.matches ? "dark" : "light");
     });
   })();
 </script>

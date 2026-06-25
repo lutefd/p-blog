@@ -1,8 +1,9 @@
 ---
 import "@/styles/global.css";
+import ThemeToggle from "@/components/ThemeToggle.astro";
 import { site } from "@/lib/site";
 
-type Props = {
+ type Props = {
   title?: string;
   description?: string;
 };
@@ -20,6 +21,16 @@ const pageTitle = title === site.title ? title : `${title} - ${site.name}`;
     <link rel="icon" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
     <title>{pageTitle}</title>
+    <script is:inline>
+      (function () {
+        const theme =
+          localStorage.theme ||
+          (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        if (theme === "dark") {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
   </head>
   <body>
     <div class="flex min-h-screen flex-col">
@@ -30,6 +41,7 @@ const pageTitle = title === site.title ? title : `${title} - ${site.name}`;
             <a class="hover:text-foreground" href="/work">work</a>
             <a class="hover:text-foreground" href="/blog">writing</a>
             <a class="hover:text-foreground" href="/about">about</a>
+            <ThemeToggle />
           </div>
         </nav>
       </header>

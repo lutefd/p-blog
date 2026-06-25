@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ExternalLink, Github } from "@lucide/svelte";
+  import { Code2, ExternalLink } from "@lucide/svelte";
 
   type Project = {
     slug: string;
@@ -86,7 +86,7 @@
           <div class="flex shrink-0 gap-2">
             {#if project.repo}
               <a class="icon-button" href={project.repo} aria-label={`${project.title} repository`}>
-                <Github size={16} />
+                <Code2 size={16} />
               </a>
             {/if}
             {#if project.url}

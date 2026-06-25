@@ -39,7 +39,7 @@
         class:selected={selectedStack === "all"}
         class="filter-button"
         type="button"
-        on:click={() => (selectedStack = "all")}
+        onclick={() => (selectedStack = "all")}
       >
         all
       </button>
@@ -48,7 +48,7 @@
           class:selected={selectedStack === stack}
           class="filter-button"
           type="button"
-          on:click={() => (selectedStack = stack)}
+          onclick={() => (selectedStack = stack)}
         >
           {stack}
         </button>

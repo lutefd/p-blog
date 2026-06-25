@@ -117,27 +117,19 @@ I wanted Codex, Claude, IDE agents, CI tools, review systems, and future agent p
 
 ## A Direction Record Is Small
 
-A useful Fabric record is compact. It does not contain the whole conversation, it does not contain a patch, and it does not try to become a second Git history. It says something closer to:
-
-```
-In this scope, prefer this direction.
-This was the rationale.
-This tempting alternative was rejected.
-This evidence explains why.
-This record is live, candidate, or durable.
-```
+A useful Fabric record is compact. It does not contain the whole conversation, it does not contain a patch, and it does not try to become a second Git history.
 
 A basic flow looks like this:
 
 ```
-fabric thread start --issue VS-123 --area virtual-store/listing \
-  --path 'internal/listing/**'
+fabric thread start --issue BILL-417 --area billing/invoices \
+  --path 'services/billing/**'
 
-fabric preflight "add listing filters" --issue VS-123 \
-  --area virtual-store/listing --path 'internal/listing/**'
+fabric preflight "add invoice adjustment reason" --issue BILL-417 \
+  --area billing/invoices --path 'services/billing/**'
 
-fabric note --candidate --reason "The shared endpoint owns pagination semantics" \
-  "Extend the existing listing endpoint instead of creating another one."
+fabric note --candidate --reason "Invoice adjustments must stay auditable across exports and refunds" \
+  "Extend the adjustment ledger instead of storing correction reasons only on the invoice view."
 
 fabric sync
 ```

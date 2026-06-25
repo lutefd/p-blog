@@ -1,0 +1,36 @@
+{
+  "schema_version": "fabric/1.0",
+  "event_id": "evt_019efca0-253e-7950-b385-561e3bf1e133",
+  "event_type": "record.created",
+  "occurred_at": "2026-06-24T23:33:34.270128-03:00",
+  "actor": {
+    "kind": "human"
+  },
+  "trust": {
+    "level": "human_confirmed",
+    "basis": "human"
+  },
+  "payload": {
+    "record": {
+      "record_id": "rec_019efca0-253e-7413-9782-80f66c5185ed",
+      "kind": "note",
+      "created_at": "2026-06-24T23:33:34-03:00",
+      "scope": {
+        "repo": "p-blog",
+        "issue": "weaver-essay-origin",
+        "areas": [
+          "content"
+        ]
+      },
+      "source": {
+        "type": "human"
+      },
+      "text": "Weaver essay narrative: born from working in large repos with multiple stacked branches where the team did not follow stacked PRs exactly. Dependencies had to be manually declared, integration branches manually created for test environments and E2E validation, and chaos came from forgotten PRs, merge conflicts, and conflict resolutions accidentally deleting small critical code. Write this as a problem-first essay and introduce Weaver late.",
+      "confidence": "human_confirmed",
+      "ttl": "until_issue_closed",
+      "status": "active",
+      "durability": "candidate",
+      "reason": "User provided the concrete origin story and failure modes for the Weaver essay."
+    }
+  }
+}

@@ -1,0 +1,31 @@
+---
+title: "Atlas and Local Incident Evidence"
+description: "A draft on keeping incident evidence local, immutable, searchable, and useful for handoff."
+date: "June 24, 2026"
+draft: true
+tags:
+  - incidents
+  - tooling
+  - operations
+project: atlas
+---
+
+Atlas is a local-first incident evidence workspace. The source material is plain about the boundary: raw evidence stays local and immutable, while parser outputs, timeline events, entities, search indexes, exports, and OCR are derived from that evidence.
+
+That is a good incident-tooling shape. During an outage, the worst thing a tool can do is ask the responder to maintain a second polished narrative while the real investigation is happening somewhere else.
+
+## Snapshot Plus Evidence
+
+The workflow starts with a short on-call snapshot: status, severity, impact, mitigation, and pending actions. That snapshot should stay operational, not encyclopedic.
+
+The raw detail goes into evidence: logs, Slack snippets, screenshots, files, notes, deploy messages, and command output. Manual timeline milestones cover the things parsers cannot infer, such as detection, mitigation start, customer updates, and resolution.
+
+## Local Search For A Messy Moment
+
+Atlas is trying to reduce context loss. Search jumps across source evidence, derived timeline events, parser output, and entities. Exports produce Slack updates, handoff material, Markdown, or raw incident folders for review and backup.
+
+The OCR detail fits the same philosophy. Screenshot OCR is optional and local-only through `tesseract`; if it is not installed, image evidence still saves normally and OCR can be retried later.
+
+## The Taste
+
+I like that Atlas does not pretend an incident is clean. It preserves the rough inputs, derives useful structure, and keeps the responder oriented without asking them to stop investigating and become a documentarian.

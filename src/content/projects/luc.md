@@ -1,6 +1,6 @@
 ---
 title: Luc
-description: A local tooling ecosystem for small, composable developer workflows.
+description: A terminal AI agent with a streaming TUI, local tool execution, OpenAI-compatible providers, and runtime extensions.
 repo: https://github.com/lutefd/luc
 stack:
   - go
@@ -10,4 +10,4 @@ featured: true
 status: active
 ---
 
-Luc is a collection point for practical local tools that improve the texture of everyday development.
+Luc combines a terminal chat interface, built-in file/shell tools, keychain-backed credentials, runtime providers, packages, hooks, prompts, skills, themes, and UI extensions.

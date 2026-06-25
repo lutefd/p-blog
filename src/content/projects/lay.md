@@ -1,6 +1,6 @@
 ---
 title: Lay
-description: A small interface and tooling experiment around layout, workflow, and presentation.
+description: An always-on-top Wails and Svelte meeting assistant that stays off screen capture and supports notes, AI chat, hotkeys, opacity, and gateway routing.
 repo: https://github.com/lutefd/lay
 stack:
   - frontend
@@ -9,4 +9,4 @@ featured: false
 status: active
 ---
 
-Lay collects interface experiments that make developer-facing work feel calmer and more direct.
+Lay is built for meetings and presentations where notes or quick AI answers should be available without being shared on screen.

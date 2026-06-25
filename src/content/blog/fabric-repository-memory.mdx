@@ -1,6 +1,6 @@
 ---
-title: "Fabric and Repository Memory"
-description: "Why repository memory should be made of scoped decisions and provenance, not raw transcripts."
+title: "Why Fabric Exists"
+description: "A draft on repository memory, scoped direction, and why transcripts are the wrong primitive for agent work."
 date: "June 24, 2026"
 draft: true
 tags:
@@ -10,28 +10,40 @@ tags:
 project: fabric
 ---
 
-Most agent memory systems start with the transcript. That is understandable: transcripts are easy to capture, easy to store, and they feel complete. They are also the wrong primitive.
+Fabric starts from an annoying failure mode: the repository already learned something, but the next thread does not inherit the learning.
 
-A transcript records what happened. Repository memory should record what should matter later.
+A reviewer explains why a behavior belongs at a shared boundary. A PR changes direction. The code merges. Weeks later, another agent working in a different package proposes the same locally reasonable shortcut, because the old review never became reusable project direction.
 
-Fabric is built around that distinction. The useful unit is not "everything the model saw." It is a scoped decision: a preference, constraint, rejection, implementation rationale, or unresolved question that future work can actually use. The shape matters because software projects collect enormous amounts of incidental context. If every conversation becomes memory, then memory becomes another inbox.
+That is not only a prompting problem. It is a memory-shape problem.
 
-## Direction Over Conversation
+## The Patch Survives, The Reason Becomes Folklore
 
-The durable thing in a project is direction. A maintainer says, "Do not add runtime GitHub fetching to this site." A review establishes, "Keep the prose Markdown-first." A refactor proves that a smaller abstraction fits the codebase better than a shared generic layer.
+Software teams already spend the expensive human time. They debate boundaries, reject shortcuts, explain incidents, and write review comments. The final diff remains in Git, but the reason often gets trapped in a PR, a transcript, or a maintainer's memory.
 
-Those are reusable. They can be scoped to an area, challenged when they become stale, and connected to the work that used them.
+Fabric treats the reusable unit as a compact record: a decision, finding, requirement, challenge, or review direction with scope, rationale, trust, lifecycle, and evidence references. The record is small on purpose. It is not trying to archive the whole conversation.
 
-The transcript around them is still useful evidence, but it should not be the interface.
+## Scope Is The Point
 
-## Causal Provenance
+Large projects do not have one global truth. Routing, caching, build tooling, data boundaries, and product workflows each have local constraints. A decision that matters deeply in one area may be noise everywhere else.
 
-The other half is provenance. If an agent changes a module because of a stored decision, the system should be able to say which decision influenced the change. If a decision was based on a PR review, issue discussion, or local experiment, that source should remain visible.
+Fabric records can be scoped by repository, issue, pull request, configured area, or path. A thread declares what it is working on, and deterministic projection selects the relevant active records within a budget. That keeps memory from becoming another giant instruction file.
 
-That turns memory from vibes into an audit trail.
+## Availability Is Not Causality
 
-## What Fabric Is Trying To Preserve
+One of the sharper ideas in Fabric is the split between availability and causal influence.
 
-Fabric is less interested in making an agent remember everything and more interested in making it remember well. Repository memory should be sparse, scoped, inspectable, and easy to dispute.
+A projection can prove that a record was selected and delivered. A provider adapter can confirm that it entered model context. That still does not prove the agent used it.
 
-The goal is not a smarter transcript. The goal is a project that can carry its taste forward.
+For "why did this happen?" views to be honest, actions and commits need explicit causal relations such as `informed_by` or `implements`. Fabric refuses to infer motivation from text similarity or from context delivery alone.
+
+## Local First, Provider Neutral
+
+The Local V1 design is intentionally modest: immutable event files, Git-backed ledger state, generated human views, and shared Git-common runtime state for sibling worktrees. It works without an account, daemon, network service, database, or model call.
+
+Provider objects stay opaque. Codex, IDE agents, CI systems, and future tools can point at messages, actions, commits, issues, or PRs without copying private transcripts into repository memory.
+
+## What I Like About The Shape
+
+Fabric is not trying to make agents remember everything. It is trying to make repositories remember the few things that should change future work.
+
+That distinction matters. A transcript is what happened. A Fabric record is what the next person or agent should not have to rediscover.

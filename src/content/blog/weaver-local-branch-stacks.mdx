@@ -1,6 +1,6 @@
 ---
-title: "Weaver and Local Branch Stacks"
-description: "A draft on stacked Git branches as a local-first workflow primitive."
+title: "Weaver and Local-First Branch Stacks"
+description: "A draft on stacked Git branches as local metadata, dependency graphs, and inspectable Git commands."
 date: "June 24, 2026"
 draft: true
 tags:
@@ -10,28 +10,30 @@ tags:
 project: weaver
 ---
 
-Stacked branches are usually presented as a code review feature. That framing is useful, but it hides the more interesting primitive: a stack is a local history shape.
+Stacked branches are often treated as a review-platform feature. Weaver takes the opposite angle: the stack is local state first.
 
-Weaver starts from the local shape first. A developer should be able to split work into reviewable layers, understand parent-child relationships, rebase the stack, and move through the work without depending on GitHub metadata as the source of truth.
+The CLI stores dependency relationships in `.git/weaver/`, keeps them out of the committed tree, and resolves stacks as a DAG. That makes the workflow independent of GitHub metadata, PR naming conventions, or a hosted service.
 
-## Why Local First
+## Declare, Inspect, Then Mutate
 
-Git already has the objects. The branch host has review state, comments, checks, and collaboration affordances, but it should not be required to understand the stack itself.
+The command set has a nice bias: inspect before changing things.
 
-Local-first stack management keeps the workflow available before a PR exists, while a PR is changing, and after remote metadata gets stale.
+`weaver stack` and `weaver unstack` declare parent-child relationships. `weaver deps`, `weaver status`, and `weaver doctor` show the stack and diagnose broken local state. Only then do commands like `weaver update`, `weaver sync`, and `weaver compose` start moving branches around.
 
-## The Workflow Texture
+That order matters because stacked work is easy to make mystical. Weaver keeps the model plain: dependencies, upstream refresh, sync strategy, and integration output.
 
-The ideal stack tool should make small actions cheap:
+## Rebase, Merge, Or Compose
 
-- see the current stack,
-- create the next branch,
-- restack after changes,
-- land work in order,
-- recover when history gets awkward.
+Weaver separates three jobs that often get blurred.
 
-The hard part is not inventing more Git concepts. The hard part is making the existing ones feel less sharp.
+`weaver update` fetches upstream refs and fast-forwards selected local branches. It does not sync a branch with its stack parent.
 
-## What Weaver Is For
+`weaver sync` brings a stack back into dependency order. By default it uses rebase for clean stacked diffs, but `weaver sync --merge` preserves branch history when open PRs, review comments, or other consumers make rewriting awkward.
 
-Weaver is an attempt to make stacked work feel like ordinary Git rather than a separate review product. It should help with the mechanical parts of branch relationships while staying honest about the local repository as the source of truth.
+`weaver compose` builds an ephemeral integration state from several branches on top of a base. It can also create or update a named integration branch, and saved integration strategies live in `.git/weaver/integrations.yaml`.
+
+## The Safety Model Is The Product
+
+The README is refreshingly explicit about failure behavior. Mutating Git commands are printed before execution. Sync state is persisted before each step. `weaver abort` restores the original branch. Compose is ephemeral by default, and failures name the branch and conflicting files.
+
+That is the right taste for a Git tool. The value is not hiding Git. The value is making the local orchestration inspectable enough that a developer can trust it.

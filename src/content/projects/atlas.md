@@ -1,6 +1,6 @@
 ---
 title: Atlas
-description: A project for mapping operational context into a more navigable shape.
+description: A local-first incident evidence workspace for immutable raw evidence, derived timelines, entities, search, exports, and OCR.
 repo: https://github.com/lutefd/atlas
 stack:
   - systems
@@ -9,4 +9,4 @@ featured: false
 status: active
 ---
 
-Atlas is a place for experiments around context, navigation, and system understanding.
+Atlas is designed for on-call investigations: keep a short operational snapshot, paste or drop evidence as work unfolds, search across derived context, and export handoff or post-incident material.

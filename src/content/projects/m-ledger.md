@@ -1,6 +1,6 @@
 ---
 title: m-ledger
-description: A ledger-oriented project focused on clear money movement and inspectable state.
+description: A project placeholder for ledger-oriented financial software; public repo context still needs review before long-form writing.
 repo: https://github.com/lutefd/m-ledger
 stack:
   - finance
@@ -9,4 +9,4 @@ featured: true
 status: active
 ---
 
-m-ledger treats financial records as something that should be boring, explicit, and easy to audit.
+This project is listed as selected work, but it needs a source-grounded README or docs pass before it gets an essay.

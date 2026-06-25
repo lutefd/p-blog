@@ -1,6 +1,6 @@
 ---
 title: Weaver
-description: Local-first stacked Git branch management that does not depend on GitHub metadata.
+description: A local-first Go CLI for stacked Git branches, dependency DAGs, stack sync, and ephemeral integration branches.
 repo: https://github.com/lutefd/weaver
 stack:
   - go
@@ -10,4 +10,4 @@ featured: true
 status: active
 ---
 
-Weaver explores branch stacks as a local workflow primitive: fast to inspect, easy to rebase, and independent of hosting metadata.
+Weaver stores stack relationships in `.git/weaver/`, resolves them as a DAG, and uses regular Git commands so the workflow remains inspectable without GitHub metadata or external services.

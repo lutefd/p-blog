@@ -1,0 +1,37 @@
+---
+title: "Fabric and Repository Memory"
+description: "Why repository memory should be made of scoped decisions and provenance, not raw transcripts."
+date: "June 24, 2026"
+draft: true
+tags:
+  - agents
+  - memory
+  - tooling
+project: fabric
+---
+
+Most agent memory systems start with the transcript. That is understandable: transcripts are easy to capture, easy to store, and they feel complete. They are also the wrong primitive.
+
+A transcript records what happened. Repository memory should record what should matter later.
+
+Fabric is built around that distinction. The useful unit is not "everything the model saw." It is a scoped decision: a preference, constraint, rejection, implementation rationale, or unresolved question that future work can actually use. The shape matters because software projects collect enormous amounts of incidental context. If every conversation becomes memory, then memory becomes another inbox.
+
+## Direction Over Conversation
+
+The durable thing in a project is direction. A maintainer says, "Do not add runtime GitHub fetching to this site." A review establishes, "Keep the prose Markdown-first." A refactor proves that a smaller abstraction fits the codebase better than a shared generic layer.
+
+Those are reusable. They can be scoped to an area, challenged when they become stale, and connected to the work that used them.
+
+The transcript around them is still useful evidence, but it should not be the interface.
+
+## Causal Provenance
+
+The other half is provenance. If an agent changes a module because of a stored decision, the system should be able to say which decision influenced the change. If a decision was based on a PR review, issue discussion, or local experiment, that source should remain visible.
+
+That turns memory from vibes into an audit trail.
+
+## What Fabric Is Trying To Preserve
+
+Fabric is less interested in making an agent remember everything and more interested in making it remember well. Repository memory should be sparse, scoped, inspectable, and easy to dispute.
+
+The goal is not a smarter transcript. The goal is a project that can carry its taste forward.

@@ -1,0 +1,36 @@
+{
+  "schema_version": "fabric/1.0",
+  "event_id": "evt_019efc92-558d-75d5-ba14-0d93c08357d6",
+  "event_type": "record.created",
+  "occurred_at": "2026-06-24T23:18:29.133168-03:00",
+  "actor": {
+    "kind": "human"
+  },
+  "trust": {
+    "level": "human_confirmed",
+    "basis": "human"
+  },
+  "payload": {
+    "record": {
+      "record_id": "rec_019efc92-558d-7385-a794-528301276678",
+      "kind": "note",
+      "created_at": "2026-06-24T23:18:29-03:00",
+      "scope": {
+        "repo": "p-blog",
+        "issue": "luc-lay-narrative-context",
+        "areas": [
+          "content"
+        ]
+      },
+      "source": {
+        "type": "human"
+      },
+      "text": "For Luc and Lay essays, follow the style of the-repository-forgot: first-person motivation, concrete frustration, then technical design as the answer. Luc narrative: experiment with minimal harnesses after learning about PI and frustration with Claude Code sluggishness. Lay narrative: being lost across too many meetings and needing private notes, review, and a meeting-aware assistant.",
+      "confidence": "human_confirmed",
+      "ttl": "until_issue_closed",
+      "status": "active",
+      "durability": "candidate",
+      "reason": "User provided specific narrative motivations for Luc and Lay essays and pointed to the new Fabric essay as the style reference."
+    }
+  }
+}

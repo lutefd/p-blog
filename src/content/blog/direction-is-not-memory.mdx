@@ -23,6 +23,8 @@ The work did not inherit the learning.
 
 The old decision existed somewhere. It just did not travel.
 
+That is the gap I mean by direction: not the code that changed, not the full review thread, and not a transcript of what happened, but the small piece of repository guidance that should have followed the next piece of work.
+
 That failure kept bothering me because it was not quite a documentation problem, not quite an agent orchestration problem, and not quite a memory problem. The team had coordinated. The review had happened. The patch had changed. But the next thread did not inherit the direction.
 
 Software work is becoming more disposable: threads are shorter, attempts are cheaper, agents can run in parallel, and worktrees multiply. A path can be explored, rejected, corrected, and replaced in a single afternoon. But repository knowledge is still trapped in the places where it happened.
@@ -59,23 +61,29 @@ That object is not a transcript. It is direction.
 
 ## More Prompt Is Not The Answer
 
-The obvious fix is to add more instructions. Put the rule in `AGENTS.md`, add it to `CLAUDE.md`, add it to Cursor rules, write a bigger project guide, and make the agent read more before it writes. This works for a while, but eventually the instruction file turns into a museum of old pain.
+The obvious fix is to put the correction somewhere the agent will read it next time. Add it to `AGENTS.md`, add it to `CLAUDE.md`, add it to Cursor rules, write a bigger project guide, and make the agent read more before it writes.
 
-Every correction goes in. Few come out. Some apply globally. Some apply to one package. Some were temporary. Some were copied from a review nobody remembers. Some are still important, but only under one path. Some look like law but were actually one-off advice. Eventually the useful warning disappears into prompt sediment.
+That works for a while. Then the instruction file starts to collect every scar the team does not know where else to put.
 
-The problem is not that agents need every instruction. They need the right instruction for the work they are about to do. A routing constraint should not burden a CSS task. A temporary migration rule should not become permanent architecture. A package-specific correction should not silently become repository-wide doctrine.
+Every painful correction wants to become a permanent warning. Few get retired. A package rule escapes its package. A temporary migration note survives the migration. A review comment from one PR becomes global doctrine because no better place existed. Eventually the useful warning disappears into prompt sediment.
 
-A global prompt file is not scoped repository memory. It is a noticeboard.
+Agents do need instructions, but they do not need all instructions equally. They need the active constraint for the work they are about to do. A routing decision should not follow a CSS change. A migration rule should not outlive the migration. A package-specific correction should not silently become repository-wide law.
+
+A global prompt file is a noticeboard. Direction needs an address.
 
 ## General Memory Is Too Broad
 
-“Memory” sounds close to the answer. Store conversations, store PRs, store review comments, store docs, and retrieve relevant facts later. That is useful for some problems, but it still feels too broad for this one.
+“Memory” sounds close to the answer because the failure looks like forgetting. A decision happened, then a later thread failed to inherit it. So the tempting answer is to remember more: conversations, PRs, review comments, docs, commits, and whatever else might become relevant later.
 
-A conversation is what happened. A repository direction is the part of what happened that should shape future work. Those are different objects. Most of a thread should not be replayed into future tasks because it may include brainstorming, wrong assumptions, abandoned plans, private context, temporary constraints, and implementation details that stopped mattering the moment the branch changed.
+But remembering what happened is not the same as preserving what should guide future work.
 
-Remembering more is not automatically better. In software engineering, the useful memory is often small, scoped, normative, and lifecycle-aware. It does not only say “this happened.” It says “in this scope, this should guide future work.”
+A conversation is full of noise: brainstorming, wrong assumptions, abandoned plans, temporary constraints, private context, and details that stopped mattering once the branch changed. A PR has the same problem in a different shape. It may contain the sentence that matters, but it also contains the negotiation around that sentence.
 
-That is the missing primitive.
+Repository direction is smaller than that. It is the part of the past that has become useful guidance for the next task.
+
+It does not only say, “this happened.” It says, “in this scope, this should shape future work.”
+
+That is why general memory feels too broad. The missing primitive is not a bigger pile of remembered context. It is a scoped object that can survive the thread where it was discovered.
 
 ## Direction Has Scope
 
@@ -150,9 +158,11 @@ That matters because disagreement is not a storage bug. If one thread says old d
 
 Writing event files is not the hard part. The hard part is deciding what deserves to become repository direction.
 
-Most comments do not. Most agent observations do not. Some review feedback is too specific. Some findings are wrong. Some constraints expire. Some rules are preferences pretending to be architecture. Capture has to be sparse and reviewable because the system becomes worse if every sentence turns into durable knowledge.
+Most comments do not. Most agent observations do not. Some review feedback is too specific. Some findings are wrong. Some constraints expire. Some rules are preferences pretending to be architecture. If capture is too eager, the system becomes another place where old confusion goes to live forever.
 
-That is the boundary I care about most. Fabric should not become a transcript archive. It should not become an AI summarizer that fills the repository with junk. It should not become a provider-specific memory plugin. And it should not become an orchestration platform too early.
+So capture has to be sparse and reviewable. Agents can suggest direction. Tools can surface repeated corrections. PR workflows can expose decisions that look reusable. But promotion should be deliberate, because a direction record is not just a note about the past. It is a claim that future work should pay attention.
+
+That is the boundary I care about most. Fabric should not become a transcript archive, an AI summarizer, or a provider-specific memory plugin. It should not rush into being an orchestration platform either.
 
 Worktrees, cloud sandboxes, remote agents, CI jobs, and merge planners are higher layers. The core should stay smaller: repository direction should be scoped, lifecycle-aware, portable, and causally traceable.
 

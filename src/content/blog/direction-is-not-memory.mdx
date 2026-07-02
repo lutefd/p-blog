@@ -117,7 +117,7 @@ If the system does not know, it should say unknown. Not “probably used,” not
 
 [Fabric](https://github.com/lutefd/fabric/) is my attempt at making this idea concrete: a local-first protocol for persistent repository direction and causal provenance across agent threads, worktrees, and tools.
 
-I do not think Fabric has to be the final shape of this problem. I am more interested in naming the missing primitive than pretending there is only one good implementation of it. Maybe the right answer is a protocol, maybe it is a convention, maybe it belongs inside review tooling, maybe it becomes part of agent runtimes, or maybe several approaches coexist. Fabric is the version I built because I wanted to see what the idea looked like when it had to touch Git, real repositories, and messy parallel work.
+I do not think Fabric has to be the final shape of this problem. I am more interested in naming the missing primitive than pretending there is only one good implementation of it. Maybe the answer is a protocol, a convention, review tooling, agent runtime support, or several approaches at once. Fabric is the version I built because I wanted to see what the idea looked like when it had to touch Git, real repositories, and messy parallel work.
 
 The first version is intentionally small. No account, no server, no daemon, no database, no LLM call, and no embedding pipeline. Just immutable protocol events stored in repository-controlled places, a CLI as the reference client, and a deterministic way to project scoped direction into work that needs it.
 

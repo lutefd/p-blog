@@ -68,4 +68,20 @@
   .button-primary {
     @apply border-primary bg-primary text-primary-foreground hover:bg-foreground/90;
   }
+
+  .prose :not(pre) > code {
+    @apply rounded-md border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.9em] font-medium text-foreground;
+  }
+
+  .prose :not(pre) > code::before,
+  .prose :not(pre) > code::after {
+    content: none;
+  }
+
+  .prose h1 code,
+  .prose h2 code,
+  .prose h3 code,
+  .prose h4 code {
+    @apply text-[0.9em] font-semibold;
+  }
 }

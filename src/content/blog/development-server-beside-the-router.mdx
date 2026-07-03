@@ -12,7 +12,7 @@ tags:
 
 import ArticleFigure from "@/components/ArticleFigure.svelte";
 
-My laptop had slowly become responsible for everything.
+My MacBook had slowly become responsible for everything.
 
 It was the editor. It was the browser. It was Docker. It was Go compilation, npm installs, databases, language servers, AI agents, background containers, local services, file watchers, search indexes, and whatever half-forgotten process survived from yesterday's experiment.
 
@@ -24,7 +24,7 @@ The model call was the expensive part in the abstract. On my machine, the lived 
 
 At some point I realized something that should have been obvious earlier.
 
-The laptop did not need to execute all of this. It only needed to display it.
+The MacBook did not need to execute all of this. It only needed to display it.
 
 That changed the shape of the problem. I did not need a more carefully tuned Mac. I needed to stop treating the Mac as the workstation.
 
@@ -79,7 +79,7 @@ The same pattern showed up elsewhere. JavaScript projects are filesystem-shaped.
 
 Git has the same boring shape. It asks the filesystem a lot of cheap questions: did this file change, what does the index say, which directories exist, what needs to be packed? The [`git update-index`](https://git-scm.com/docs/git-update-index) docs explicitly call out how much Git relies on efficient `lstat(2)` checks, and features like split index, untracked cache, and fsmonitor exist because large working trees turn metadata checks into real work. Git's [`core.ignoreCase`](https://git-scm.com/docs/git-config#Documentation/git-config.txt-coreignoreCase) docs are also a reminder that macOS's common case-insensitive setup has edges Linux usually avoids.
 
-Go was less central. Go already compiles quickly, and in raw benchmarks a modern Apple Silicon Mac can beat an old Intel laptop. But that missed the point: when `go test ./...` runs on the server, the laptop does not become part of the workload. The editor stays responsive. The browser stays responsive. The machine on my lap stays cool.
+Go was less central. Go already compiles quickly, and in raw benchmarks a modern Apple Silicon Mac can beat an old Intel laptop. But that missed the point: when `go test ./...` runs on the server, the MacBook does not become part of the workload. The editor stays responsive. The browser stays responsive. The machine on my lap stays cool.
 
 The win was not that every command became faster. The win was that the load landed somewhere else.
 
@@ -97,11 +97,11 @@ It may leave behind shells, test runners, language servers, watchers, MCP server
 
 On macOS, that whole process world lives next to WindowServer, browsers, Slack, media, battery management, video calls, notifications, and everything else that makes the machine pleasant to use. That is the overhead I wanted to move away.
 
-Not because macOS cannot run processes. Of course it can. The problem is that my laptop had become both the interactive personal computer and the noisy agent execution environment. Those are different jobs with different failure modes.
+Not because macOS cannot run processes. Of course it can. The problem is that my MacBook had become both the interactive personal computer and the noisy agent execution environment. Those are different jobs with different failure modes.
 
 A personal machine should feel quiet, responsive, and disposable in the moment. I should be able to close it, move rooms, join a call, open a browser, and not care that some agent decided to run tests three times and start a dev server along the way.
 
-An agent machine can be messier. It can have process trees. It can have tmux panes full of logs. It can have Docker containers running all day. It can have a language server chewing on a repository. It can have an agent exploring a branch, running commands, and making mistakes. It can be inspected, killed, restarted, or rebooted without turning the laptop itself into the recovery project.
+An agent machine can be messier. It can have process trees. It can have tmux panes full of logs. It can have Docker containers running all day. It can have a language server chewing on a repository. It can have an agent exploring a branch, running commands, and making mistakes. It can be inspected, killed, restarted, or rebooted without turning the MacBook itself into the recovery project.
 
 That distinction became the whole point. The Mac should not be the place where agent noise accumulates. It should be the window into the place where agent noise is allowed to happen.
 
@@ -123,19 +123,19 @@ Once the development environment is remote, tmux stops being a terminal preferen
 
 The [tmux manual](https://man7.org/linux/man-pages/man1/tmux.1.html) describes the core property I care about: sessions can be detached and continue running in the background, then reattached later.
 
-That maps perfectly onto modern development work. A migration can keep running. A Docker Compose stack can stay visible. A long test run can finish while the laptop sleeps. An agent can continue through a task without depending on the Wi-Fi staying perfect. A server log can remain in the same pane all week.
+That maps perfectly onto modern development work. A migration can keep running. A Docker Compose stack can stay visible. A long test run can finish while my MacBook sleeps. An agent can continue through a task without depending on the Wi-Fi staying perfect. A server log can remain in the same pane all week.
 
-Before, I would hesitate to kick off a long-running thing if I knew I had to close the laptop soon. Now the laptop is not the session boundary. It is only a client attached to the session.
+Before, I would hesitate to kick off a long-running thing if I knew I had to close the laptop soon. Now the MacBook is not the session boundary. It is only a client attached to the session.
 
 ## The Unexpected Benefit Was Silence
 
-The technical benefits are real, but the thing I noticed first was physical: the laptop became quiet again.
+The technical benefits are real, but the thing I noticed first was physical: my MacBook became quiet again.
 
 Docker no longer spun the fans. Compiles no longer stole memory from the browser. Containers no longer ate battery. npm installs no longer made the whole machine feel temporarily heavier. Agent experiments no longer shared the same thermal envelope as a video call. The Mac became good at being a Mac again.
 
 That sounds soft, but it is probably the part that will keep me from going back.
 
-A laptop is a strange place to put an always-on development stack. It moves. It sleeps. It changes networks. It runs on battery. It has a small thermal budget. It is also the machine where I read, write, talk, listen, browse, and carry the day around.
+A MacBook is a strange place to put an always-on development stack. It moves. It sleeps. It changes networks. It runs on battery. It has a small thermal budget. It is also the machine where I read, write, talk, listen, browse, and carry the day around.
 
 For years I had treated that as normal because the laptop was powerful enough.
 
@@ -172,10 +172,10 @@ The useful claim is narrower: Linux is the native environment for a lot of the t
 
 The better question is: should this entire process tree live on the same machine I use as my quiet, mobile, personal interface to the work?
 
-For me, the answer is probably no. The laptop can stay a laptop.
+For me, the answer is probably no. The MacBook can stay a `laptop`.
 
 I had been asking how to make my Mac better at being a workstation. The better question was whether it needed to be the workstation at all.
 
-My laptop stopped being my workstation.
+My MacBook stopped being my workstation.
 
 It became my window into one.

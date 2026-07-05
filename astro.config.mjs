@@ -5,19 +5,19 @@ import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
-  site: "https://luisdourado.dev",
-  output: "static",
-  integrations: [
-    svelte(),
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    mdx(),
-    sitemap(),
-  ],
-  markdown: {
-    shikiConfig: {
-      theme: "github-dark",
-    },
-  },
+	site: "https://www.luisdourado.com",
+	output: "static",
+	integrations: [
+		svelte(),
+		tailwind({
+			applyBaseStyles: false,
+		}),
+		mdx(),
+		sitemap(),
+	],
+	markdown: {
+		shikiConfig: {
+			theme: "github-dark",
+		},
+	},
 });

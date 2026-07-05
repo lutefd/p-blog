@@ -2,23 +2,23 @@
 
 > Personal website for Luis Dourado, a senior software engineer writing about backend systems, developer tools, Git workflows, agent-assisted engineering, local infrastructure, and product-minded software delivery.
 
-This site contains selected work, essays, and notes. Prefer the linked text endpoints when available because they are generated for terminal and language-model reading with reduced layout noise.
+This site contains selected work, essays, and notes. The canonical URLs below are human-facing web pages. When fetched by curl-like clients, several of these routes return terminal-friendly plain text; direct `.txt` variants are also available for explicit plain-text retrieval.
 
 ## Core Pages
 
-- [Home](https://www.luisdourado.com/terminal.txt): Overview of Luis Dourado, featured projects, latest writing, and important links.
-- [About](https://www.luisdourado.com/about.txt): Background, engineering focus areas, and contact links.
-- [Work](https://www.luisdourado.com/work.txt): Selected projects with descriptions, status, stack, and repository links.
-- [Writing](https://www.luisdourado.com/blog.txt): Blog index with post summaries, dates, tags, and links.
+- [Home](https://www.luisdourado.com/): Overview of Luis Dourado, featured projects, latest writing, and important links.
+- [About](https://www.luisdourado.com/about): Background, engineering focus areas, and contact links.
+- [Work](https://www.luisdourado.com/work): Selected projects with descriptions, status, stack, and repository links.
+- [Writing](https://www.luisdourado.com/blog): Blog index with post summaries, dates, tags, and links.
 - [RSS](https://www.luisdourado.com/rss.xml): Feed for published writing.
 
 ## Featured Writing
 
-- [The Development Server Beside The Router](https://www.luisdourado.com/blog/development-server-beside-the-router.txt): Moving development work from a MacBook to a permanent Linux server accessed through Remote SSH and Tailscale.
-- [Direction Is Not Memory](https://www.luisdourado.com/blog/direction-is-not-memory.txt): Why repeated agent corrections in real repositories need scoped repository direction instead of more transcript memory.
-- [What An Agent Harness Actually Owns](https://www.luisdourado.com/blog/what-an-harness-owns.txt): Runtime boundaries around agentic tools, provider adapters, tool execution, extensions, and local trust.
-- [The Branch Nobody Could Explain](https://www.luisdourado.com/blog/the-branch-nobody-could-explain.txt): How large-repo branch chaos turned into a local-first workflow for declaring dependencies and building integration branches.
-- [The Private Layer Beside A Meeting](https://www.luisdourado.com/blog/meeting-fog.txt): A private note layer, transcript-aware chat, and always-on-top assistant for meeting-heavy work.
+- [The Development Server Beside The Router](https://www.luisdourado.com/blog/development-server-beside-the-router): Moving development work from a MacBook to a permanent Linux server accessed through Remote SSH and Tailscale.
+- [Direction Is Not Memory](https://www.luisdourado.com/blog/direction-is-not-memory): Why repeated agent corrections in real repositories need scoped repository direction instead of more transcript memory.
+- [What An Agent Harness Actually Owns](https://www.luisdourado.com/blog/what-an-harness-owns): Runtime boundaries around agentic tools, provider adapters, tool execution, extensions, and local trust.
+- [The Branch Nobody Could Explain](https://www.luisdourado.com/blog/the-branch-nobody-could-explain): How large-repo branch chaos turned into a local-first workflow for declaring dependencies and building integration branches.
+- [The Private Layer Beside A Meeting](https://www.luisdourado.com/blog/meeting-fog): A private note layer, transcript-aware chat, and always-on-top assistant for meeting-heavy work.
 
 ## Projects
 

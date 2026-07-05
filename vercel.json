@@ -1,0 +1,40 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "headers": [
+    {
+      "source": "/terminal",
+      "headers": [
+        {
+          "key": "content-type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/terminal.txt",
+      "headers": [
+        {
+          "key": "content-type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/terminal",
+      "destination": "/terminal.txt"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|[Hh][Tt][Tt][Pp][Ii][Ee]|\\bxh\\b).*"
+        }
+      ],
+      "destination": "/terminal.txt"
+    }
+  ]
+}

@@ -1,120 +1,147 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "headers": [
-    {
-      "source": "/terminal",
-      "headers": [
-        {
-          "key": "content-type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/terminal.txt",
-      "headers": [
-        {
-          "key": "content-type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/about.txt",
-      "headers": [
-        {
-          "key": "content-type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/work.txt",
-      "headers": [
-        {
-          "key": "content-type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/blog.txt",
-      "headers": [
-        {
-          "key": "content-type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "/blog/:slug.txt",
-      "headers": [
-        {
-          "key": "content-type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/terminal",
-      "destination": "/terminal.txt"
-    },
-    {
-      "source": "/about",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|[Hh][Tt][Tt][Pp][Ii][Ee]|\\bxh\\b).*"
-        }
-      ],
-      "destination": "/about.txt"
-    },
-    {
-      "source": "/work",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|[Hh][Tt][Tt][Pp][Ii][Ee]|\\bxh\\b).*"
-        }
-      ],
-      "destination": "/work.txt"
-    },
-    {
-      "source": "/blog",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|[Hh][Tt][Tt][Pp][Ii][Ee]|\\bxh\\b).*"
-        }
-      ],
-      "destination": "/blog.txt"
-    },
-    {
-      "source": "/blog/:slug",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|[Hh][Tt][Tt][Pp][Ii][Ee]|\\bxh\\b).*"
-        }
-      ],
-      "destination": "/blog/:slug.txt"
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": ".*([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|[Hh][Tt][Tt][Pp][Ii][Ee]|\\bxh\\b).*"
-        }
-      ],
-      "destination": "/terminal.txt"
-    }
-  ]
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"headers": [
+		{
+			"source": "/terminal",
+			"headers": [
+				{
+					"key": "content-type",
+					"value": "text/plain; charset=utf-8"
+				}
+			]
+		},
+		{
+			"source": "/terminal.txt",
+			"headers": [
+				{
+					"key": "content-type",
+					"value": "text/plain; charset=utf-8"
+				}
+			]
+		},
+		{
+			"source": "/about.txt",
+			"headers": [
+				{
+					"key": "content-type",
+					"value": "text/plain; charset=utf-8"
+				}
+			]
+		},
+		{
+			"source": "/work.txt",
+			"headers": [
+				{
+					"key": "content-type",
+					"value": "text/plain; charset=utf-8"
+				}
+			]
+		},
+		{
+			"source": "/blog.txt",
+			"headers": [
+				{
+					"key": "content-type",
+					"value": "text/plain; charset=utf-8"
+				}
+			]
+		},
+		{
+			"source": "/blog/:slug.txt",
+			"headers": [
+				{
+					"key": "content-type",
+					"value": "text/plain; charset=utf-8"
+				}
+			]
+		}
+	],
+	"routes": [
+		{
+			"src": "^/$",
+			"has": [
+				{
+					"type": "header",
+					"key": "user-agent",
+					"value": {
+						"re": "^([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|HTTPie|xh)(/| ).*"
+					}
+				}
+			],
+			"dest": "/terminal.txt",
+			"headers": {
+				"content-type": "text/plain; charset=utf-8"
+			}
+		},
+		{
+			"src": "^/about/?$",
+			"has": [
+				{
+					"type": "header",
+					"key": "user-agent",
+					"value": {
+						"re": "^([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|HTTPie|xh)(/| ).*"
+					}
+				}
+			],
+			"dest": "/about.txt",
+			"headers": {
+				"content-type": "text/plain; charset=utf-8"
+			}
+		},
+		{
+			"src": "^/work/?$",
+			"has": [
+				{
+					"type": "header",
+					"key": "user-agent",
+					"value": {
+						"re": "^([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|HTTPie|xh)(/| ).*"
+					}
+				}
+			],
+			"dest": "/work.txt",
+			"headers": {
+				"content-type": "text/plain; charset=utf-8"
+			}
+		},
+		{
+			"src": "^/blog/?$",
+			"has": [
+				{
+					"type": "header",
+					"key": "user-agent",
+					"value": {
+						"re": "^([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|HTTPie|xh)(/| ).*"
+					}
+				}
+			],
+			"dest": "/blog.txt",
+			"headers": {
+				"content-type": "text/plain; charset=utf-8"
+			}
+		},
+		{
+			"src": "^/blog/([^/]+)/?$",
+			"has": [
+				{
+					"type": "header",
+					"key": "user-agent",
+					"value": {
+						"re": "^([Cc][Uu][Rr][Ll]|[Ww][Gg][Ee][Tt]|HTTPie|xh)(/| ).*"
+					}
+				}
+			],
+			"dest": "/blog/$1.txt",
+			"headers": {
+				"content-type": "text/plain; charset=utf-8"
+			}
+		}
+	],
+	"rewrites": [
+		{
+			"source": "/terminal",
+			"destination": "/terminal.txt"
+		}
+	]
 }
